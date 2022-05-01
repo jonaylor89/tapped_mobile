@@ -7,6 +7,7 @@ const ProfileScreen = () => {
         <View style={styles.container} >
             <Text>Profile Screen</Text>
             <Text>Profile Page - Test</Text>
+            <Text>Profile Page - Michael</Text>
         </View>
     );
 }
@@ -14,7 +15,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#0ff',
       alignItems: 'center',
       justifyContent: 'center',
     },
