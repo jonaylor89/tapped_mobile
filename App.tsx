@@ -1,20 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import ProfileScreen from './screens/ProfileScreen';
+import MainContainer from './components/navigation/MainContainer';
+import SearchBar from './components/searchbar/SearchBar'
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ProfileScreen />
-    </View>
-  );
-}
+        <MainContainer/>
+    );
+  return (
+        <SearchBar/>
+    );
+ }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0ff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

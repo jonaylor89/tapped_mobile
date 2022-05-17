@@ -25,7 +25,7 @@ function MainContainer() {
                     let rn = route.name;
 
                     if (rn === profileName) {
-                        iconName = focused ? 'home' : 'home-outline'
+                        iconName = focused ? 'person' : 'person-outline'
                     } else if (rn === searchName) {
                         iconName = focused ? 'search' : 'search-outline'
                     }
@@ -39,11 +39,10 @@ function MainContainer() {
                 labelStyle: { paddingBottom: 10, fontSize: 10},
                 style: {padding: 10, height: 70}
             }}
-
             >
 
-            <Tab.Screen name={profileName} component={ProfileScreen}/>
             <Tab.Screen name={searchName} component={SearchScreen}/>
+            <Tab.Screen name={profileName} component={ProfileScreen}/>
 
         </Tab.Navigator>
 
