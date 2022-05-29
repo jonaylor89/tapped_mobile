@@ -1,15 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
+import WalletConnectProvider from '@walletconnect/react-native-dapp';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
-import ProfileScreen from './screens/ProfileScreen';
 import MainContainer from './components/navigation/MainContainer';
-import SearchBar from './components/searchbar/SearchBar'
 
 export default function App() {
   return (
-        <MainContainer/>
-    );
-  return (
-        <SearchBar/>
-    );
- }
+    <WalletConnectProvider
+      redirectUrl={Platform.OS === 'web' ? window.location.origin : 'tapped://'}
+      storageOptions={{
+        asyncStorage: AsyncStorage,
+      }}>
+      <MainContainer />
+    </WalletConnectProvider>
+  );
+}
 
