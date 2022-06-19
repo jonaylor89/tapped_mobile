@@ -18,14 +18,14 @@ function Login() {
         "imtoken",
         "pillar",
       ],
-      signinMessage: "Wealcome!"
+      signinMessage: "Welcome!"
   });
     console.log(user);
     }
   return (
     <div className={styles.login_container}>
       <div className={styles.login_card}>
-        <Image src={icon} width={100} height={100} />
+        <Image src={icon} width={175} height={175} />
         <div className={styles.sign_in_container}>
           {authError && (
             <p className={styles.error}>
@@ -36,7 +36,9 @@ function Login() {
           <button
             onClick={() => authWalletConnect()}
           >
-            Login to tapped
+          <big>
+            Login to Tapped
+            </big>
           </button>
         </div>
       </div>
