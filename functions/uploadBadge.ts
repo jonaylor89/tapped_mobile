@@ -1,0 +1,1 @@
+// This serverless function will upload a badge to the database and store it's img in storage
