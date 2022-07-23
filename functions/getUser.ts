@@ -1,1 +1,0 @@
-// This serverless function will return a user object from the database
