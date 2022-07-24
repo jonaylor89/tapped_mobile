@@ -9,6 +9,7 @@ CREATE TABLE users (
 
   avatar_url TEXT,
   website TEXT,
+  email TEXT,
   twitter_handle TEXT,
   instagram_handle TEXT,
   tiktok_handle TEXT,
