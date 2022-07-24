@@ -65,7 +65,7 @@ export default function Account({ session }: { session: Session }) {
       };
 
       let { error } = await supabase
-        .from("profiles")
+        .from("users")
         .upsert(updates, { returning: "minimal" });
 
       if (error) {
