@@ -6,6 +6,8 @@ import type { ApiError, Session } from "@supabase/supabase-js";
 import DropDownPicker from 'react-native-dropdown-picker';
 import React from "react";
 
+import Avatar from "./Avatar";
+
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -162,7 +164,7 @@ export default function Account({ session }: { session: Session }) {
         <h1>Send Badge Form</h1>
         <View style={styles.verticallySpaced}>
 
-          // TODO: Add input to upload the badge image
+          {/* TODO: Add input to upload the badge image */}
 
           <Input
             label="Recipient username"
@@ -178,6 +180,7 @@ export default function Account({ session }: { session: Session }) {
   const Profile = () => {
     return (
       <View>
+        <Avatar url={avatar_url} size={4096} onUpload={(imageUrl: string) => { setAvatarUrl(imageUrl) }} />
         <h1>{username}</h1>
         <Text>Name: {name}</Text>
         <Text>Bio: {bio}</Text>
