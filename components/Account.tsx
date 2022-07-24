@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { ApiError, Session } from "@supabase/supabase-js";
+import DropDownPicker from 'react-native-dropdown-picker';
 import React from "react";
 
 export default function Account({ session }: { session: Session }) {
