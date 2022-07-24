@@ -2,11 +2,11 @@
 -- users
 CREATE TABLE users (
   id UUID REFERENCES auth.users NOT NULL,
-  name varchar(255) NOT NULL,
-  email varchar(255) NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
   username TEXT UNIQUE,
 
-  account_type TEXT NOT NULL DEFAULT "basic",
+  account_type TEXT NOT NULL,
 
   avatar_url TEXT,
   website TEXT,
@@ -22,7 +22,7 @@ CREATE TABLE users (
 
   PRIMARY KEY (id),
   UNIQUE(username),
-  CONTRAINT username_length CHECK (CHAR_LENGTH(username) >= 3)
+  CONSTRAINT username_length CHECK (CHAR_LENGTH(username) >= 3)
 );
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
@@ -35,7 +35,7 @@ CREATE POLICY "Users can insert their own profile."
   WITH CHECK ( auth.uid() = id );
 
 CREATE POLICY "Users can update own profile."
-  ON profiles FOR UPDATE
+  ON users FOR UPDATE
   USING ( auth.uid() = id );
 
 -- badges
@@ -43,8 +43,8 @@ CREATE TABLE badges (
     id UUID NOT NULL,
     sender_id UUID REFERENCES users NOT NULL,
     receiver_id UUID REFERENCES users NOT NULL,
-    badge_url TEXT NOT NULL,
-)
+    badge_url TEXT NOT NULL
+);
 
 -- Set up Realtime
 BEGIN;
