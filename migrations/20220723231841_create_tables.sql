@@ -3,7 +3,6 @@
 CREATE TABLE users (
   id UUID REFERENCES auth.users NOT NULL,
   name TEXT NOT NULL,
-  email TEXT NOT NULL,
   username TEXT UNIQUE,
 
   account_type TEXT NOT NULL,

@@ -7,15 +7,17 @@ import React from "react";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [avatar_url, setAvatarUrl] = useState("");
+  const [account_type, setAccountType] = useState("");
 
   useEffect(() => {
-    if (session) getProfile();
+    if (session) getUser();
   }, [session]);
 
-  async function getProfile() {
+  async function getUser() {
     try {
       setLoading(true);
       const user = supabase.auth.user();
@@ -23,7 +25,7 @@ export default function Account({ session }: { session: Session }) {
 
       let { data, error, status } = await supabase
         .from("users")
-        .select(`username, website, avatar_url`)
+        .select(`name, username, website, avatar_url, account_type`)
         .eq("id", user.id)
         .single();
       if (error && status !== 406) {
@@ -31,9 +33,11 @@ export default function Account({ session }: { session: Session }) {
       }
 
       if (data) {
+        setName(data.name)
         setUsername(data.username);
         setWebsite(data.website);
         setAvatarUrl(data.avatar_url);
+        setAccountType(data.account_type);
       }
     } catch (error) {
       Alert.alert((error as ApiError).message);
@@ -43,13 +47,17 @@ export default function Account({ session }: { session: Session }) {
   }
 
   async function updateProfile({
+    name,
     username,
     website,
     avatar_url,
+    account_type,
   }: {
+    name: string,
     username: string;
     website: string;
     avatar_url: string;
+    account_type: string;
   }) {
     try {
       setLoading(true);
@@ -59,8 +67,10 @@ export default function Account({ session }: { session: Session }) {
       const updates = {
         id: user.id,
         username,
+        name,
         website,
         avatar_url,
+        account_type,
         updated_at: new Date(),
       };
 
@@ -72,7 +82,7 @@ export default function Account({ session }: { session: Session }) {
         throw error;
       }
     } catch (error) {
-      Alert.alert((error as ApiError).message);
+      Alert.alert((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -101,7 +111,7 @@ export default function Account({ session }: { session: Session }) {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           title={loading ? "Loading ..." : "Update"}
-          onPress={() => updateProfile({ username, website, avatar_url })}
+          onPress={() => updateProfile({ name, username, website, avatar_url, account_type })}
           disabled={loading}
         />
       </View>
