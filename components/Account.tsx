@@ -1,29 +1,14 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { StyleSheet, View, Alert, Text, Linking, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Alert, Text, Linking, TouchableOpacity, Platform, Image } from "react-native";
 import { Button, Input } from "react-native-elements";
 import type { ApiError, Session } from "@supabase/supabase-js";
 import React from "react";
+import { v4 as uuidv4 } from 'uuid';
 
-// import {clusterApiUrl,
-//   Connection,
-//   PublicKey,
-//   Keypair,
-//   LAMPORTS_PER_SOL
-// } from '@solana/web3.js';
-
-// import {
-//   createMint,
-//   getOrCreateAssociatedTokenAccount,
-//   mintTo,
-//   transfer,
-//   Account as TokenAccount,
-//   getMint,
-//   getAccount
-// } from '@solana/spl-token';
-
-window.Buffer = window.Buffer || require("buffer").Buffer;
 import Avatar from "./Avatar";
+import Badges from "./Badges";
+import { pickImage } from "../lib/utils";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(false);
@@ -38,6 +23,12 @@ export default function Account({ session }: { session: Session }) {
   const [createBadgeForm, setCreateBadgeForm] = useState(false);
 
   const [badgeReceiver, setBadgeReceiver] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [imageFormData, setImageFormData] = useState<FormData | null>(null);
+  const [badgeUrl, setBadgeUrl] = useState('')
+  const [badgeImageFilename, setBadgeImageFilename] = useState('')
+
+  const [usersBadges, setUsersBadges] = useState<Array<{ id: string; badge_url: string; sender_id: string }>>([]);
 
   useEffect(() => {
     if (session) getUser();
@@ -67,6 +58,20 @@ export default function Account({ session }: { session: Session }) {
         setAvatarUrl(data.avatar_url);
         setAccountType(data.account_type);
       }
+
+      const { data: badgeData, error: badgeError } = await supabase
+        .from('badges')
+        .select('id, badge_url, sender_id')
+        .eq('receiver_id', supabase.auth.user()!.id);
+
+      if (badgeError) {
+        throw error
+      }
+
+      if (badgeData) {
+        setUsersBadges(badgeData)
+      }
+
     } catch (error) {
       Alert.alert((error as ApiError).message);
     } finally {
@@ -146,25 +151,107 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+  const createBadge = async () => {
+    // upload image to supabase storage
+    await uploadBadgeImage();
+
+    // check if recipient exists
+    try {
+      const { data, error, status } = await supabase
+        .from('users')
+        .select('id')
+        .match({ username: badgeReceiver })
+        .single()
+
+      if (error && status !== 406) {
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error(`user ${badgeReceiver} does not exist`)
+      }
+
+      const recipientId = data.id;
+      const senderId = supabase.auth.user()!.id;
+
+      // Insert badge into badges table
+      const { error: insertError } = await supabase
+        .from('badges')
+        .insert([{
+          id: uuidv4(),
+          badge_url: badgeUrl,
+          receiver_id: recipientId,
+          sender_id: senderId,
+        }])
+
+      if (insertError) {
+        console.log(insertError)
+      }
+
+    } catch (e) {
+      console.log(e)
+    }
+
+    // go back to account page
+    setCreateBadgeForm(false);
+  }
+
+  async function uploadBadgeImage() {
+    try {
+      setUploading(true)
+
+      if (imageFormData === null || badgeImageFilename === '') {
+        return;
+      }
+
+      let { error: uploadError } = await supabase.storage.from('badges').upload(badgeImageFilename, imageFormData)
+      if (uploadError) {
+        throw uploadError
+      }
+
+      let { publicURL, error } = await supabase.storage.from('badges').getPublicUrl(badgeImageFilename);
+      if (error) {
+        throw error
+      }
+      if (!publicURL) {
+        return;
+      }
+
+      setBadgeUrl(publicURL);
+      console.log(publicURL);
+    } catch (error) {
+      alert((error as Error).message)
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const Profile = () => {
     return (
       <View>
         <Avatar url={avatarUrl} size={4096} onUpload={(imageUrl: string) => { updateUserAvatar(imageUrl) }} />
         <h1>{username}</h1>
-        <Button >Create Token</Button>
-        {/* <Button onPress={mintToken}>Mint Token</Button>
-        <Button onPress={checkBalance}>Check Balance</Button>
-        <Button onPress={sendToken}>Send Token</Button> */}
         <Text>Name: {name}</Text>
         <Text>Bio: {bio}</Text>
         <Text>Website: </Text>
         <TouchableOpacity onPress={() => Linking.openURL(website)}>
           <Text style={{ color: 'blue' }}>{website}</Text>
         </TouchableOpacity>
-        <Text>Avatar URL: {avatarUrl}</Text>
         {(account_type === 'business') ? <Button title='Create a new badge' onPress={() => setCreateBadgeForm(true)} /> : null}
+        <Badges badges={usersBadges} />
       </View>
     );
+  }
+
+  const getBadgeImage = async () => {
+    const imageData = await pickImage();
+    if (!imageData) {
+      return;
+    }
+
+    const {filename, imageInfo} = imageData;
+    setBadgeImageFilename(filename);
+    setImageFormData(imageInfo);
   }
 
   return (
@@ -176,17 +263,24 @@ export default function Account({ session }: { session: Session }) {
               (createBadgeForm)
                 ? <View>
                   <h1>Send Badge Form</h1>
+
                   <View style={styles.verticallySpaced}>
-
-                    {/* TODO: Add input to upload the badge image */}
-
+                    {imageFormData !== null ? (
+                      // <Image source={{ uri: badgeUrl }} style={{ width: 200, height: 200 }} />
+                      <View />
+                    ) : (
+                      <View>
+                        <Button title="Pick an image from camera roll" onPress={getBadgeImage} disabled={uploading} />
+                      </View>
+                    )}
                     <Input
                       label="Recipient username"
                       value={badgeReceiver || ""}
                       onChangeText={(text) => setBadgeReceiver(text)}
                     />
                   </View>
-                  <Button title='Confirm' onPress={() => setCreateBadgeForm(false)} />
+
+                  <Button title='Confirm' onPress={() => createBadge()} disabled={uploading} />
                 </View>
                 : <Profile />
             }
