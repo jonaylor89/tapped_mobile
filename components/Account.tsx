@@ -95,6 +95,13 @@ export default function Account({ session }: { session: Session }) {
       </View>
       <View style={styles.verticallySpaced}>
         <Input
+          label="Name"
+          value={name || ""}
+          onChangeText={(text) => setName(text)}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
           label="Username"
           value={username || ""}
           onChangeText={(text) => setUsername(text)}
@@ -105,6 +112,13 @@ export default function Account({ session }: { session: Session }) {
           label="Website"
           value={website || ""}
           onChangeText={(text) => setWebsite(text)}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Account Type"
+          value={account_type || ""}
+          onChangeText={(text) => setAccountType(text)}
         />
       </View>
 
