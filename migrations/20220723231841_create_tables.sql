@@ -7,6 +7,7 @@ CREATE TABLE users (
 
   account_type TEXT NOT NULL,
 
+  bio TEXT,
   avatar_url TEXT,
   website TEXT,
   email TEXT,

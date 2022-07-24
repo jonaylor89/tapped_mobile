@@ -54,10 +54,11 @@ function mintToken() {
             mint,
             fromTokenAccount.address,
             fromWallet.publicKey,
-            10000000000 // 10 billion
+            10_000_000_000 // 10 billion
         );
+
+        console.log(`Mint signature: ${signature}`);
     }
-    console.log(`Mint signature: $(signature)`);
 
     async function checkBalance() {
         const mintInfo = await getMint(connection, mint);
@@ -77,7 +78,7 @@ function mintToken() {
             fromTokenAccount.address,
             toTokenAccount.address,
             fromWallet.publicKey,
-            1000000000 // 1 billion
+            1_000_000_000 // 1 billion
         );
         console.log(`finished transfer with ${signature}`);
     }
