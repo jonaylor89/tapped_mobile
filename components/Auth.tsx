@@ -15,6 +15,8 @@ export default function Auth() {
       password: password,
     })
 
+    console.log(user)
+
     if (error) Alert.alert(error.message)
     setLoading(false)
   }
