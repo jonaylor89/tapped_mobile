@@ -10,12 +10,12 @@ export default function Avatar({url, size, onUpload }: {
     size: number; 
     onUpload: Function;
 }) {
-    const [avatarUrl, setAvatarUrl] = useState('')
+    const [avatarUrl, setAvatarUrl] = useState(url)
     const [uploading, setUploading] = useState(false)
 
     useEffect(() => {
-        if (url !== '') downloadImage(url)
-    }, [url])
+        if (avatarUrl !== '') downloadImage(avatarUrl)
+    }, [avatarUrl])
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -55,7 +55,7 @@ export default function Avatar({url, size, onUpload }: {
             const fileName = `${Math.random()}.${fileExt}`
             const filePath = `${fileName}`
 
-            const file = new File([imageUri], fileName, { type: 'image/jpeg' })
+            const file = new File([imageUri], fileName)
 
             let { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, imageUri)
 
