@@ -290,7 +290,6 @@ export default function Account({ session }: { session: Session }) {
           ? <View style={styles.container}>
             {
               (createBadgeForm)
-                ? <SendBadgeForm /> 
                 ? <View>
                   <h1>Send Badge Form</h1>
                   <View style={styles.verticallySpaced}>
