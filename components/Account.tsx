@@ -13,7 +13,7 @@ export default function Account({ session }: { session: Session }) {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [website, setWebsite] = useState("");
-  const [avatar_url, setAvatarUrl] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [account_type, setAccountType] = useState("");
 
   const [onboarded, setOnboarded] = useState(false);
@@ -63,11 +63,11 @@ export default function Account({ session }: { session: Session }) {
     avatar_url,
     account_type,
   }: {
-    name: string,
-    username: string;
-    website: string;
-    avatar_url: string;
-    account_type: string;
+    name?: string,
+    username?: string;
+    website?: string;
+    avatar_url?: string;
+    account_type?: string;
   }) {
     try {
       setLoading(true);
@@ -103,7 +103,10 @@ export default function Account({ session }: { session: Session }) {
   const Profile = () => {
     return (
       <View>
-        <Avatar url={avatar_url} size={4096} onUpload={(imageUrl: string) => { setAvatarUrl(imageUrl) }} />
+        <Avatar url={avatarUrl} size={4096} onUpload={(imageUrl: string) => { 
+          updateProfile({avatar_url: imageUrl});
+          setAvatarUrl(imageUrl);
+        }} />
         <h1>{username}</h1>
         <Text>Name: {name}</Text>
         <Text>Bio: {bio}</Text>
@@ -111,7 +114,7 @@ export default function Account({ session }: { session: Session }) {
         <TouchableOpacity onPress={() => Linking.openURL(website)}>
           <Text style={{ color: 'blue' }}>{website}</Text>
         </TouchableOpacity>
-        <Text>Avatar URL: {avatar_url}</Text>
+        <Text>Avatar URL: {avatarUrl}</Text>
         {(account_type === 'business') ? <Button title='Create a new badge' onPress={() => setCreateBadgeForm(true)} /> : null}
       </View>
     );
