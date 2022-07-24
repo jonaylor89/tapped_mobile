@@ -63,11 +63,11 @@ export default function Account({ session }: { session: Session }) {
     avatar_url,
     account_type,
   }: {
-    name?: string,
-    username?: string;
-    website?: string;
-    avatar_url?: string;
-    account_type?: string;
+    name: string,
+    username: string;
+    website: string;
+    avatar_url: string;
+    account_type: string;
   }) {
     try {
       setLoading(true);
@@ -100,13 +100,38 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+  async function updateUserAvatar(avatar_url: string) {
+    try {
+      setLoading(true);
+      const user = supabase.auth.user();
+      if (!user) throw new Error("No user on the session!");
+
+      const updates = {
+        avatar_url,
+        updated_at: new Date(),
+      };
+
+      let { error } = await supabase
+        .from("users")
+        .update(updates, { returning: "minimal" })
+        .match({ id: user.id });
+
+      if (error) {
+        throw error;
+      }
+
+      setAvatarUrl(avatar_url);
+    } catch (error) {
+      Alert.alert((error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const Profile = () => {
     return (
       <View>
-        <Avatar url={avatarUrl} size={4096} onUpload={(imageUrl: string) => { 
-          updateProfile({avatar_url: imageUrl});
-          setAvatarUrl(imageUrl);
-        }} />
+        <Avatar url={avatarUrl} size={4096} onUpload={(imageUrl: string) => { updateUserAvatar(imageUrl) }} />
         <h1>{username}</h1>
         <Text>Name: {name}</Text>
         <Text>Bio: {bio}</Text>
@@ -187,7 +212,7 @@ export default function Account({ session }: { session: Session }) {
             <View style={[styles.verticallySpaced, styles.mt20]}>
               <Button
                 title={loading ? "Loading ..." : "Complete Sign Up"}
-                onPress={() => updateProfile({ name, username, website, avatar_url, account_type })}
+                onPress={() => updateProfile({ name, username, website, avatar_url: avatarUrl, account_type })}
                 disabled={loading}
               />
             </View>
