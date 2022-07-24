@@ -20,7 +20,7 @@ export default function App() {
   return (
     <View>
       { (session && session.user) 
-        ? <Account key={session!.user!.id} session={session!} />
+        ? <Account key={session.user.id} session={session} />
         : <Auth />
       }
     </View>

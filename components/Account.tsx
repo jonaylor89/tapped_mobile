@@ -3,7 +3,6 @@ import { supabase } from "../lib/supabase";
 import { StyleSheet, View, Alert, Text, Linking, TouchableOpacity } from "react-native";
 import { Button, Input } from "react-native-elements";
 import type { ApiError, Session } from "@supabase/supabase-js";
-import DropDownPicker from 'react-native-dropdown-picker';
 import React from "react";
 
 // import {clusterApiUrl,
@@ -24,6 +23,7 @@ import React from "react";
 // } from '@solana/spl-token';
 
 window.Buffer = window.Buffer || require("buffer").Buffer;
+import Avatar from "./Avatar";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(false);
@@ -265,6 +265,7 @@ export default function Account({ session }: { session: Session }) {
   const Profile = () => {
     return (
       <View>
+        <Avatar url={avatar_url} size={4096} onUpload={(imageUrl: string) => { setAvatarUrl(imageUrl) }} />
         <h1>{username}</h1>
         <Button >Create Token</Button>
         {/* <Button onPress={mintToken}>Mint Token</Button>
@@ -290,10 +291,75 @@ export default function Account({ session }: { session: Session }) {
             {
               (createBadgeForm)
                 ? <SendBadgeForm /> 
+                ? <View>
+                  <h1>Send Badge Form</h1>
+                  <View style={styles.verticallySpaced}>
+
+                    {/* TODO: Add input to upload the badge image */}
+
+                    <Input
+                      label="Recipient username"
+                      value={badgeReceiver || ""}
+                      onChangeText={(text) => setBadgeReceiver(text)}
+                    />
+                  </View>
+                  <Button title='Confirm' onPress={() => setCreateBadgeForm(false)} />
+                </View>
                 : <Profile />
             }
           </View>
-          : <OnboardForm />
+          : <View>
+            <View style={[styles.verticallySpaced, styles.mt20]}>
+              <Input label="Email" value={session?.user?.email} disabled />
+            </View>
+            <View style={styles.verticallySpaced}>
+              <Input
+                label="Name"
+                value={name || ""}
+                onChangeText={(text) => setName(text)}
+              />
+            </View>
+            <View style={styles.verticallySpaced}>
+              <Input
+                label="Username"
+                value={username || ""}
+                onChangeText={(text) => setUsername(text)}
+              />
+            </View>
+            <View style={styles.verticallySpaced}>
+              <Input
+                label="Bio"
+                value={bio || ""}
+                onChangeText={(text) => setBio(text)}
+              />
+            </View>
+            <View style={styles.verticallySpaced}>
+              <Input
+                label="Website"
+                value={website || ""}
+                onChangeText={(text) => setWebsite(text)}
+              />
+            </View>
+            <View style={styles.verticallySpaced}>
+              <Input
+                label="Account Type"
+                value={account_type || ""}
+                onChangeText={(text) => setAccountType(text)}
+              />
+            </View>
+
+            <View style={[styles.verticallySpaced, styles.mt20]}>
+              <Button
+                title={loading ? "Loading ..." : "Complete Sign Up"}
+                onPress={() => updateProfile({ name, username, website, avatar_url, account_type })}
+                disabled={loading}
+              />
+            </View>
+
+            <View style={styles.verticallySpaced}>
+              <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+            </View>
+          </View>
       }
     </View>
   );

@@ -3,14 +3,35 @@ import { supabase } from '../lib/supabase'
 import { Alert, StyleSheet, View, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import React from 'react'
+import * as ImagePicker from 'expo-image-picker';
 
-export default function Avatar(url: string, size: number, onUpload: Function) {
-    const [avatarUrl, setAvatarUrl] = useState('')
+export default function Avatar({url, size, onUpload }: {
+    url: string; 
+    size: number; 
+    onUpload: Function;
+}) {
+    const [avatarUrl, setAvatarUrl] = useState(url)
     const [uploading, setUploading] = useState(false)
 
     useEffect(() => {
-        if (url !== '') downloadImage(url)
-    }, [url])
+        if (avatarUrl !== '') downloadImage(avatarUrl)
+    }, [avatarUrl])
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+            uploadAvatar(result.uri)
+        }
+      };
 
     async function downloadImage(path: string) {
         try {
@@ -25,20 +46,18 @@ export default function Avatar(url: string, size: number, onUpload: Function) {
         }
     }
 
-    async function uploadAvatar(event: any) {
+    async function uploadAvatar(imageUri: string) {
         try {
             setUploading(true)
 
-            if (!event.target.files || event.target.files.length === 0) {
-                throw new Error('You must select an image to upload.')
-            }
 
-            const file = event.target.files[0]
-            const fileExt = file.name.split('.').pop()
+            const fileExt = imageUri.split('.').pop()
             const fileName = `${Math.random()}.${fileExt}`
             const filePath = `${fileName}`
 
-            let { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+            const file = new File([imageUri], fileName)
+
+            let { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, imageUri)
 
             if (uploadError) {
                 throw uploadError
@@ -55,18 +74,12 @@ export default function Avatar(url: string, size: number, onUpload: Function) {
     return (
         <View>
             {avatarUrl ? (
-                <Image src={avatarUrl} alt="Avatar" className="avatar image" />
+                <Image source={{uri: avatarUrl}} style={{width: 400, height: 400}} />
             ) : (
-                <View className="avatar no-image" />
+                <View/>
             )}
             <View>
-                <Input
-                    type="file"
-                    id="single"
-                    accept="image/*"
-                    onChange={uploadAvatar}
-                    disabled={uploading}
-                />
+                <Button title="Pick an image from camera roll" onPress={pickImage} disabled={uploading} />
             </View>
         </View>
     )

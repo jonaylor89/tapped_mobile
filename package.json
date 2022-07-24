@@ -8,6 +8,7 @@
     "@solana/web3.js": "^1.50.0",
     "@supabase/supabase-js": "^1.35.4",
     "expo": "^45.0.4",
+    "expo-image-picker": "~13.1.1",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "react": "17.0.1",
