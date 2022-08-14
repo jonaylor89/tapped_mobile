@@ -1,3 +1,11 @@
-// export components here
+// export all components here
 
-export * from './navigation/BottomTabNavigator'
+import Account from './Account';
+import Auth from './Auth';
+import Avatar from './Avatar';
+
+export {
+    Account,
+    Auth,
+    Avatar,
+}
