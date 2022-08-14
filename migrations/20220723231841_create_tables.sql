@@ -44,8 +44,21 @@ CREATE TABLE badges (
     id UUID NOT NULL,
     sender_id UUID REFERENCES users NOT NULL,
     receiver_id UUID REFERENCES users NOT NULL,
-    badge_url TEXT NOT NULL
+    badge_url TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (id)
 );
+
+ALTER TABLE badges ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public badges are viewable by everyone."
+  ON badges FOR SELECT
+  USING ( true );
+
+CREATE POLICY "Users can send badges."
+  ON badges FOR INSERT
+  WITH CHECK ( auth.uid() = id AND auth.uid() == sender_id AND account_type == 'business' );
 
 -- Set up Realtime
 BEGIN;
