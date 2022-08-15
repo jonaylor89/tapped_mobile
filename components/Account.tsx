@@ -1,16 +1,15 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { useState } from "react";
 import { StyleSheet, View, Alert, Text, Linking, TouchableOpacity, Platform, Image } from "react-native";
 import { Button, Input } from "react-native-elements";
-import type { ApiError, Session } from "@supabase/supabase-js";
 import React from "react";
 import { v4 as uuidv4 } from 'uuid';
 
 import Avatar from "./Avatar";
 import Badges from "./Badges";
 import { pickImage } from "../lib/utils";
+import { useAuth } from "../contexts/useAuth";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -30,54 +29,7 @@ export default function Account({ session }: { session: Session }) {
 
   const [usersBadges, setUsersBadges] = useState<Array<{ id: string; badge_url: string; sender_id: string }>>([]);
 
-  useEffect(() => {
-    if (session) getUser();
-  }, [session]);
-
-  async function getUser() {
-    try {
-      setLoading(true);
-      const user = supabase.auth.user();
-      if (!user) throw new Error("No user on the session!");
-
-      let { data, error, status } = await supabase
-        .from("users")
-        .select(`name, username, bio, website, avatar_url, account_type`)
-        .eq("id", user.id)
-        .single();
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        setOnboarded(true);
-        setName(data.name)
-        setUsername(data.username);
-        setBio(data.bio);
-        setWebsite(data.website);
-        setAvatarUrl(data.avatar_url);
-        setAccountType(data.account_type);
-      }
-
-      const { data: badgeData, error: badgeError } = await supabase
-        .from('badges')
-        .select('id, badge_url, sender_id')
-        .eq('receiver_id', supabase.auth.user()!.id);
-
-      if (badgeError) {
-        throw error
-      }
-
-      if (badgeData) {
-        setUsersBadges(badgeData)
-      }
-
-    } catch (error) {
-      Alert.alert((error as ApiError).message);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { user } = useAuth()
 
   async function updateProfile({
     name,
