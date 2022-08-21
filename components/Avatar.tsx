@@ -6,10 +6,9 @@ import React from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function Avatar({ url, size, onUpload }: {
+export default function Avatar({ url, size }: {
     url: string;
     size: number;
-    onUpload: Function;
 }) {
     const [imageUrl, setImageUrl] = useState(url);
     const [uploading, setUploading] = useState(false);
@@ -76,7 +75,7 @@ export default function Avatar({ url, size, onUpload }: {
             }
 
             console.log(publicURL);
-            onUpload(publicURL);
+            // onUpload(publicURL);
             setImageUrl(publicURL);
         } catch (error) {
             alert((error as Error).message)

@@ -1,18 +1,32 @@
 import React from 'react'
-import 'react-native-url-polyfill/auto'
-import { Account } from './components'
-import { View } from 'react-native'
-import { AuthProvider } from './contexts/useAuth'
-import { DatabaseProvider } from './contexts/useDatabase'
+import { NavigationContainer } from '@react-navigation/native';
+import { 
+  AuthProvider, 
+  DatabaseProvider, 
+  StorageProvider,
+} from './contexts/providers'
+import { CreateBadgeForm, OnboardForm, Profile, RootStack, routes } from './screens'
 
 export default function App() {
   return (
-    <View>
+    <>
       <DatabaseProvider>
         <AuthProvider>
-          <Account />
+          <StorageProvider>
+            <NavigationContainer>
+              // TODO make a splash screen 
+              // The screen will just display a loading icon  
+              // but will load all the necessary bits of data 
+              // as well as check if a user is onboarded or not
+              <RootStack.Navigator initialRouteName={routes.Profile}>
+                <RootStack.Screen name={routes.Profile} component={Profile} />
+                <RootStack.Screen name={routes.OnboardForm} component={OnboardForm} />
+                <RootStack.Screen name={routes.CreateBadgeForm} component={CreateBadgeForm} />
+              </RootStack.Navigator>
+            </NavigationContainer>
+          </StorageProvider>
         </AuthProvider>
       </DatabaseProvider>
-    </View>
+    </>
   )
 }

@@ -1,4 +1,7 @@
-import UserModel from "../models/UserModel"
+
+type Subscription = {
+    unsubscribe: () => void;
+}
 
 export default interface AuthRepository {
     signUp(data: any): Promise<void>;
@@ -6,6 +9,6 @@ export default interface AuthRepository {
     signOut(): Promise<void>;
     onAuthStateChange(
         callback: (event: string, session: any) => Promise<void>
-    ): UserModel | null; 
+    ): Subscription; 
     session(): any;
 }

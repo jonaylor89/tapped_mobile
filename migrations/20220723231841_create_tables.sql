@@ -2,6 +2,7 @@
 -- users
 CREATE TABLE users (
   id UUID REFERENCES auth.users NOT NULL,
+  email TEXT NOT NULL,
   name TEXT NOT NULL,
   username TEXT UNIQUE,
 
