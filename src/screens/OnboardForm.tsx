@@ -35,7 +35,7 @@ const OnboardForm = () => {
             setLoading(true);
             if (!user) throw new Error("No user on the session!");
 
-            const updatedUser = {
+            database.upsertUser({
                 id: user.id,
                 email: user.email,
                 username,
@@ -52,9 +52,7 @@ const OnboardForm = () => {
                 accountType: AccountType.Basic,
                 updatedAt: new Date(),
                 createdAt: new Date(),
-            };
-
-            database.upsertUser(updatedUser);
+            });
         } catch (error) {
             Alert.alert((error as Error).message);
         } finally {
@@ -67,7 +65,7 @@ const OnboardForm = () => {
     return (
         <View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Input label="Email" value={user?.email!} disabled />
+                <Input label="Email" value={user?.email || ''} disabled />
             </View>
             <View style={styles.verticallySpaced}>
                 <Input

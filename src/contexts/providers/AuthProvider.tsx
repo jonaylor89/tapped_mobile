@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: {
                         const user = await database.getUserById(session?.user?.id || null)
                         setUser(user);
                     } catch (error) {
+                        console.error(error)
                     } finally {
                         setLoading(false);
                     }

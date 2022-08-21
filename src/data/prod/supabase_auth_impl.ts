@@ -1,6 +1,6 @@
 
-import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '../../lib/supabase';
+import { Session } from '@supabase/supabase-js';
+import { supabase } from './supabase';
 import AuthRepository from '../auth_repository';
 
 export default class SupabaseAuthImpl implements AuthRepository {
@@ -15,7 +15,7 @@ export default class SupabaseAuthImpl implements AuthRepository {
         return listener
     }
 
-    async signUp(data: any) {
+    async signUp(data: { email: string, password: string }) {
         supabase.auth.signUp(data)
     }
 
@@ -23,7 +23,7 @@ export default class SupabaseAuthImpl implements AuthRepository {
         return supabase.auth.session()
     }
 
-    async signIn(data: any) {
+    async signIn(data: { email: string, password: string }) {
         supabase.auth.signIn(data)
     }
 

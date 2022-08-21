@@ -1,4 +1,4 @@
-import { supabase } from "../../lib/supabase";
+import { supabase } from "./supabase";
 import StorageRepository from "../storage_repository";
 
 enum Buckets {
@@ -20,9 +20,14 @@ export default class SupabaseStorageImpl implements StorageRepository {
     }
 
     async uploadBadge(filename: string, imageInfo: FormData): Promise<void> {
-        throw new Error("Not implemented")
+        const { error } = await supabase.storage.from(Buckets.Badges).upload(filename, imageInfo)
+        if (error) throw error
     }
+
     async getBadgeUrl(filename: string): Promise<string | null> {
-        return null;
+        const { publicURL, error } = await supabase.storage.from(Buckets.Badges).getPublicUrl(filename);
+        if (error) throw error
+
+        return publicURL
     }
 }

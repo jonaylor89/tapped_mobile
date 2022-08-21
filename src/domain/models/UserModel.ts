@@ -23,7 +23,7 @@ class UserModel {
 
     static uninitializedUser = (id: string): UserModel => { return new UserModel(id) }
 
-    static toJSON = (user: UserModel): unknown => {
+    static toJSON = (user: UserModel): any => {
         return {
             id: user.id,
             email: user.email,
