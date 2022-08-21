@@ -26,6 +26,9 @@ const CreateBadgeForm = ({ navigation }: Props) => {
     const uploadBadgeImage = async () => {
         try {
             setUploading(true)
+
+            if (badgeFilename === '' || badgeImageInfo === null) return
+
             storage.uploadBadge(badgeFilename, badgeImageInfo)
 
             storage.getBadgeUrl(badgeFilename)

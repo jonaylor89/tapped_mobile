@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function pickImage(): Promise<{filename?: string; imageInfo?: FormData, cancelled: boolean}> {
 
     if (Platform.OS !== 'web') {
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (permissionResult.granted === false) {
         alert('Permission to access camera roll is required!');
@@ -14,7 +14,7 @@ export async function pickImage(): Promise<{filename?: string; imageInfo?: FormD
     }
 
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],

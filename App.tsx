@@ -4,8 +4,14 @@ import {
   AuthProvider, 
   DatabaseProvider, 
   StorageProvider,
-} from './contexts/providers'
-import { CreateBadgeForm, OnboardForm, Profile, RootStack, routes } from './screens'
+} from './src/contexts/providers'
+import { 
+  CreateBadgeForm, 
+  OnboardForm, 
+  Profile, 
+  RootStack, 
+  routes,
+} from './src/screens'
 
 export default function App() {
   return (
@@ -14,10 +20,12 @@ export default function App() {
         <AuthProvider>
           <StorageProvider>
             <NavigationContainer>
-              // TODO make a splash screen 
-              // The screen will just display a loading icon  
-              // but will load all the necessary bits of data 
-              // as well as check if a user is onboarded or not
+              {/* 
+                TODO make a splash screen 
+                The screen will just display a loading icon  
+                but will load all the necessary bits of data 
+                as well as check if a user is onboarded or not
+              */}
               <RootStack.Navigator initialRouteName={routes.Profile}>
                 <RootStack.Screen name={routes.Profile} component={Profile} />
                 <RootStack.Screen name={routes.OnboardForm} component={OnboardForm} />

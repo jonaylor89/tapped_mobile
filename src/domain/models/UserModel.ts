@@ -13,7 +13,7 @@ class UserModel {
     spotifyHandle: string | null = null;
     avatarUrl: string | null = null;
     accountType: string | null = null;
-    onboarded: boolean = false;
+    onboarded = false;
     updatedAt: Date | null = null;
     createdAt: Date | null = null;
 
@@ -23,7 +23,7 @@ class UserModel {
 
     static uninitializedUser = (id: string): UserModel => { return new UserModel(id) }
 
-    static toJSON = (user: UserModel): any => {
+    static toJSON = (user: UserModel): unknown => {
         return {
             id: user.id,
             email: user.email,

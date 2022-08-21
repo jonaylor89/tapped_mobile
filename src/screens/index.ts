@@ -2,7 +2,7 @@
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Auth from './Auth';
-import Profile from '../screens/Profile'
+import Profile from './Profile'
 import CreateBadgeForm from './CreateBadgeForm';
 import OnboardForm from './OnboardForm';
 

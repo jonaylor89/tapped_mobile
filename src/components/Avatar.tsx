@@ -1,10 +1,10 @@
-import { SetStateAction, useCallback, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
-import { Alert, StyleSheet, View, Image, Platform } from 'react-native'
-import { Button, Input } from 'react-native-elements'
+import { useState } from 'react'
+import { View, Image, Platform } from 'react-native'
+import { Button } from 'react-native-elements'
 import React from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
+import { useStorage } from '../contexts/useStorage'
 
 export default function Avatar({ url, size }: {
     url: string;
@@ -13,10 +13,12 @@ export default function Avatar({ url, size }: {
     const [imageUrl, setImageUrl] = useState(url);
     const [uploading, setUploading] = useState(false);
 
+    const { storage } = useStorage()
+
     const pickImage = async () => {
 
         if (Platform.OS !== 'web') {
-            let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
             if (permissionResult.granted === false) {
                 alert('Permission to access camera roll is required!');
@@ -25,7 +27,7 @@ export default function Avatar({ url, size }: {
         }
 
         // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
+        const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
@@ -61,22 +63,16 @@ export default function Avatar({ url, size }: {
         try {
             setUploading(true)
 
-            let { error: uploadError } = await supabase.storage.from('avatars').upload(filename, imageInfo)
-            if (uploadError) {
-                throw uploadError
-            }
+            await storage.uploadPFP(filename, imageInfo)
 
-            let { publicURL, error } = await supabase.storage.from('avatars').getPublicUrl(filename);
-            if (error) {
-                throw error
-            }
-            if (!publicURL) {
+            const publicUrl = await storage.getPFPUrl(filename)
+            if (!publicUrl) {
                 return;
             }
 
-            console.log(publicURL);
+            console.log(publicUrl);
             // onUpload(publicURL);
-            setImageUrl(publicURL);
+            setImageUrl(publicUrl);
         } catch (error) {
             alert((error as Error).message)
         } finally {
