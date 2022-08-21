@@ -131,9 +131,11 @@ const OnboardForm = () => {
                 />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                // TODO Display the profile picture if one is already uploaded
-                // and use some kind of overlay to allow the user to upload a new one
-                // https://dribbble.com/shots/15145502-Login-And-Sign-up-Screens
+                {
+                    // TODO Display the profile picture if one is already uploaded
+                    // and use some kind of overlay to allow the user to upload a new one
+                    // https://dribbble.com/shots/15145502-Login-And-Sign-up-Screens
+                }
                 <Button
                     title={'Upload Profile Picture'}
                     onPress={() => uploadProfilePicture()}

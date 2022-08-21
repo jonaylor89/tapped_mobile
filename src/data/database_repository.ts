@@ -1,12 +1,12 @@
 import Badge from "../domain/models/Badge";
-import { UserModel } from "../domain/models"
+import { OnboardedUser } from "../domain/models"
 
 export default interface DatabaseRepository {
     // User
-    getUserById(id: string): Promise<UserModel | null>;
-    getUserByUsername(username: string): Promise<UserModel>;
-    upsertUser(user: UserModel): Promise<void>;
-    updateUser(user: UserModel): Promise<void>;
+    getUserById(id: string): Promise<OnboardedUser | null>;
+    getUserByUsername(username: string): Promise<OnboardedUser>;
+    upsertUser(user: OnboardedUser): Promise<void>;
+    updateUser(user: OnboardedUser): Promise<void>;
 
     // Badges
     getBadgesByUser(userId: string): Promise<Badge[]>;

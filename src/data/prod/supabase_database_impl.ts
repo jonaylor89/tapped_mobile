@@ -1,9 +1,8 @@
 
-import UserModel from '../../domain/models/UserModel';
 import DatabaseRepository from '../database_repository';
 
 import { supabase } from './supabase';
-import { Badge } from '../../domain/models';
+import { Badge, OnboardedUser } from '../../domain/models';
 
 enum Tables {
     Users = 'users',
@@ -13,7 +12,7 @@ enum Tables {
 export default class SupabaseDatabaseImpl implements DatabaseRepository {
 
     // User
-    async getUserById(id: string): Promise<UserModel | null> {
+    async getUserById(id: string): Promise<OnboardedUser | null> {
         try {
             const { data, error, status } = await supabase
                 .from(Tables.Users)
@@ -25,11 +24,11 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
             }
 
             if (!data) {
-                return UserModel.uninitializedUser(id)
+                return OnboardedUser.uninitializedUser(id)
             }
 
             // TODO validate data
-            return UserModel.fromJSON(data)
+            return OnboardedUser.fromJSON(data)
         } catch (error) {
             // TODO add better log mechanism
             console.log(error)
@@ -37,7 +36,7 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
         }
     }
 
-    async getUserByUsername(username: string): Promise<UserModel> {
+    async getUserByUsername(username: string): Promise<OnboardedUser> {
         const { data, error, status } = await supabase
             .from(Tables.Users)
             .select(`name, username, bio, website, avatar_url, account_type, onboarded, updated_at`)
@@ -48,12 +47,12 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
             throw error;
         }
 
-        return UserModel.fromJSON(data)
+        return OnboardedUser.fromJSON(data)
     }
 
-    async upsertUser(user: UserModel) {
+    async upsertUser(user: OnboardedUser) {
 
-        const dbUser = UserModel.toJSON(user);
+        const dbUser = OnboardedUser.toJSON(user);
 
         const { error } = await supabase
             .from(Tables.Users)
@@ -64,8 +63,8 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
         }
     }
 
-    async updateUser(user: UserModel) {
-        const dbUser = UserModel.toJSON(user);
+    async updateUser(user: OnboardedUser) {
+        const dbUser = OnboardedUser.toJSON(user);
         const { error } = await supabase
             .from("users")
             .update(dbUser, { returning: "minimal" })

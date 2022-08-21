@@ -1,5 +1,5 @@
 
-import type UserModel from '../domain/models/UserModel'
+import type OnboardedUser from '../domain/models/OnboardedUser'
 
 import { useContext, createContext } from 'react';
 import SupabaseAuthImpl from '../data/prod/supabase_auth_impl';
@@ -10,7 +10,7 @@ const auth = new SupabaseAuthImpl()
 
 // create a context for authentication
 export const AuthContext = createContext<{ 
-    user: UserModel | null,
+    user: OnboardedUser | null,
     auth: AuthRepository,
 }>({ user: null, auth: auth });
 
