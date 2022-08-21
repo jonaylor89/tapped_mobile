@@ -1,7 +1,6 @@
 
 class OnboardedUser {
     id!: string;
-    email: string | null = null;
     name: string | null = null;
     username: string | null = null;
     bio: string | null = null;
@@ -13,7 +12,6 @@ class OnboardedUser {
     spotifyHandle: string | null = null;
     avatarUrl: string | null = null;
     accountType: string | null = null;
-    onboarded = false;
     updatedAt: Date | null = null;
     createdAt: Date | null = null;
 
@@ -26,19 +24,17 @@ class OnboardedUser {
     static toJSON = (user: OnboardedUser): any => {
         return {
             id: user.id,
-            email: user.email,
             name: user.name,
             username: user.username,
             bio: user.bio,
             website: user.website,
             twitter_handle: user.twitterHandle,
-            instragram_handle: user.instagramHandle,
+            instagram_handle: user.instagramHandle,
             tiktok_handle: user.tiktokHandle,
             soundcloud_handle: user.soundcloudHandle,
             spotify_handle: user.spotifyHandle,
             avatar_url: user.avatarUrl,
             account_type: user.accountType,
-            onboarded: user.onboarded,
             updated_at: user.updatedAt,
         }
     }
@@ -46,7 +42,6 @@ class OnboardedUser {
     static fromJSON = (other: any): OnboardedUser => {
         return {
             id: other.id,
-            email: other.email,
             name: other.name,
             username: other.username,
             bio: other.bio,
@@ -58,7 +53,6 @@ class OnboardedUser {
             spotifyHandle: other.spotify_handle,
             avatarUrl: other.avatar_url,
             accountType: other.account_type,
-            onboarded: other.onboarded,
             updatedAt: other.updated_at,
             createdAt: other.created_at,
         }

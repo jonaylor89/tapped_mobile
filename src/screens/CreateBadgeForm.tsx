@@ -8,7 +8,6 @@ import { useAuth } from "../contexts/useAuth";
 import { useDatabase } from "../contexts/useDatabase";
 import { useStorage } from "../contexts/useStorage";
 import { Badge } from "../domain/models";
-import { pickImage } from "../lib/utils";
 
 type Props = NativeStackScreenProps<RootStackParamList, routes.CreateBadgeForm>;
 

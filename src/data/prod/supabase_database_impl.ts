@@ -14,32 +14,37 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
     // User
     async getUserById(id: string): Promise<OnboardedUser | null> {
         try {
+            console.log('SupabaseDatabaseImpl.getUserById', id)
             const { data, error, status } = await supabase
                 .from(Tables.Users)
-                .select(`name, username, bio, website, avatar_url, account_type, onboarded, updated_at`)
+                .select(`*`)
                 .eq("id", id)
                 .single();
+
             if (error && status !== 406) {
                 throw error;
             }
 
             if (!data) {
-                return OnboardedUser.uninitializedUser(id)
+                return null
             }
 
             // TODO validate data
             return OnboardedUser.fromJSON(data)
         } catch (error) {
             // TODO add better log mechanism
-            console.log(error)
-            return null
+            console.error(error)
+            throw error
         }
     }
 
-    async getUserByUsername(username: string): Promise<OnboardedUser> {
+    async getUserByUsername(username: string): Promise<OnboardedUser | null> {
+        try {
+
+        console.log('SupabaseDatabaseImpl.getUserByUsername', username)
         const { data, error, status } = await supabase
             .from(Tables.Users)
-            .select(`name, username, bio, website, avatar_url, account_type, onboarded, updated_at`)
+            .select(`*`)
             .match({ username })
             .single()
 
@@ -47,7 +52,15 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
             throw error;
         }
 
+        if (!data) {
+            return null
+        }
+
         return OnboardedUser.fromJSON(data)
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
     }
 
     async upsertUser(user: OnboardedUser) {
@@ -79,8 +92,8 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
     async getBadgesByUser(userId: string): Promise<Badge[]> {
         const { data, error } = await supabase
             .from(Tables.Badges)
-            .select(`id, sender_id, recipient_id, badge_url`)
-            .match({ recipient_id: userId });
+            .select(`*`)
+            .match({ receiver_id: userId });
 
         if (error) throw error
 

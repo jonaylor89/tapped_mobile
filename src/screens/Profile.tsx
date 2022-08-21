@@ -14,7 +14,8 @@ import { useDatabase } from "../contexts/useDatabase";
 type Props = NativeStackScreenProps<RootStackParamList, routes.Profile>;
 
 const Profile = ({ navigation, route }: Props) => {
-    const { userId } = route.params
+    const userId = route.params?.userId || null
+
     const [loading, setLoading] = useState(false)
     const [currentUser, setCurrentUser] = useState<OnboardedUser | null>(null)
 
@@ -23,8 +24,15 @@ const Profile = ({ navigation, route }: Props) => {
 
     useEffect(() => {
         setLoading(true)
-        if (user && user.id === userId) setCurrentUser(user)
         try {
+            if (user && (!userId || user.id === userId)) {
+                setCurrentUser(user)
+                return
+            }
+            if (!userId) {
+                console.error("no user param")
+                return
+            }
             database.getUserById(userId)
                 .then(fetchedUser => {
                     setCurrentUser(fetchedUser)
@@ -41,10 +49,10 @@ const Profile = ({ navigation, route }: Props) => {
 
     return (
         (loading || !currentUser) 
-        ? <View>Loading...</View> 
+        ? <View>{`Loading... ${loading} and ${JSON.stringify(currentUser)}`}</View> 
         : <>
             { /* TODO add an edit profile button and screen */}
-            <Avatar url={user?.avatarUrl || ''} size={4096} />
+            <Avatar url={user?.avatarUrl || ''} size={4096} editable={false} />
             <h1>{user?.username}</h1>
             <Text>Name: {user?.name}</Text>
             <Text>Bio: {user?.bio}</Text>
@@ -56,7 +64,7 @@ const Profile = ({ navigation, route }: Props) => {
                 ? <Button title='Create a new badge' onPress={() => navigation.push(routes.CreateBadgeForm)} />
                 : null
             }
-            <Badges userId={userId} />
+            <Badges userId={currentUser.id} />
         </>
     );
 }

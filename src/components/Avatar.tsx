@@ -5,15 +5,18 @@ import React from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
 import { useStorage } from '../contexts/useStorage'
+import { useImagePicker } from '../contexts/useImagePicker';
 
-export default function Avatar({ url, size }: {
+export default function Avatar({ url, size, editable }: {
     url: string;
     size: number;
+    editable: boolean;
 }) {
     const [imageUrl, setImageUrl] = useState(url);
     const [uploading, setUploading] = useState(false);
 
     const { storage } = useStorage()
+    const { imagePicker } = useImagePicker()
 
     const pickImage = async () => {
 
@@ -82,11 +85,10 @@ export default function Avatar({ url, size }: {
 
     return (
         <View>
-            {imageUrl !== '' ? (
-                <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
-            ) : (
-                <View />
-            )}
+            {(imageUrl !== '')
+            ? <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
+            : <View />
+    }
             <View>
                 <Button title="Pick an image from camera roll" onPress={pickImage} disabled={uploading} />
             </View>

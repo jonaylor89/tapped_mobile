@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { OnboardedUser } from "../../domain/models";
+import { OnboardedUser, UserModel } from "../../domain/models";
 import { Auth, OnboardForm } from "../../screens";
 import { AuthContext, useAuth } from "../useAuth";
 import { useDatabase } from "../useDatabase";
@@ -12,9 +12,10 @@ export const AuthProvider = ({ children }: {
 
     // create state values for user data and loading
     const [user, setUser] = useState<OnboardedUser | null>(null);
+    const [authUser, setAuthUser] = useState<UserModel | null>(null);
     const [onboarded, setOnboarded] = useState(false)
     const [loading, setLoading] = useState(false);
-    const [session, setSession] = useState<any>(null)
+    const [currentSession, setCurrentSession] = useState<any>(null)
 
     const { database } = useDatabase()
     const { auth } = useAuth()
@@ -24,14 +25,17 @@ export const AuthProvider = ({ children }: {
             setLoading(true);
 
             // get session data if there is an active session
-            setSession(auth.session())
+            setCurrentSession(auth.session())
 
             // Get user data
-            database.getUserById(session?.user?.id || null)
-                .then(user => {
-                    if (user) { setOnboarded(true) }
-                    setUser(session?.user ?? null);
-                })
+            if (currentSession?.user) {
+                setAuthUser(currentSession.user)
+                database.getUserById(currentSession.user.id)
+                    .then(user => {
+                        if (user) { setOnboarded(true) }
+                        setUser(user);
+                    })
+            }
 
             // listen for changes to auth
             const listener =
@@ -39,8 +43,14 @@ export const AuthProvider = ({ children }: {
                     async (_event: string, session: any) => {
                         try {
                             setLoading(true);
-                            setSession(session)
-                            const user = await database.getUserById(session?.user?.id || null)
+                            setCurrentSession(session)
+                            if (!session?.user) { 
+                                setUser(null)
+                                return 
+                            }
+
+                            setAuthUser(session.user)
+                            const user = await database.getUserById(session.user.id)
                             if (user) { setOnboarded(true) }
                             setUser(user);
                         } catch (error) {
@@ -56,23 +66,23 @@ export const AuthProvider = ({ children }: {
                 listener?.unsubscribe();
             };
         } catch (e) {
-            console.log(e)
+            console.error(e)
         } finally {
             setLoading(false);
         }
     }, []);
 
     const RouteAuth = () => {
-        if (!(session && session.user) || user === null) {
+        if (!(currentSession && currentSession.user)) {
             return <Auth />
         }
 
         return onboarded
-            ? { children }
+            ? children
             : <OnboardForm />
     }
     // create signUp, signIn, signOut functions
-    const value = { user, auth }
+    const value = { authUser, user, auth }
 
     // use a provider to pass down the value
     return (loading)

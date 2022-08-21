@@ -16,3 +16,5 @@ export const StorageProvider = ({ children }: {
         </StorageContext.Provider>
     );
 };
+
+export default StorageProvider
