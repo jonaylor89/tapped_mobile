@@ -2,17 +2,22 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { StyleSheet, Button, View } from "react-native";
 import { Input } from "react-native-elements";
+import { v4 as uuidv4 } from 'uuid';
 import { RootStackParamList, routes } from ".";
 import { useAuth } from "../contexts/useAuth";
 import { useDatabase } from "../contexts/useDatabase";
 import { useStorage } from "../contexts/useStorage";
 import { Badge } from "../domain/models";
+import { pickImage } from "../lib/utils";
 
 type Props = NativeStackScreenProps<RootStackParamList, routes.CreateBadgeForm>;
 
 const CreateBadgeForm = ({ navigation }: Props) => {
     const [uploading, setUploading] = useState(false);
     const [badgeReceiver, setBadgeReceiver] = useState('')
+    const [badgeUrl, setBadgeUrl] = useState('')
+    const [badgeImageInfo, setBadgeImageInfo] = useState<FormData | null>(null)
+    const [badgeFilename, setBadgeFilename] = useState('')
 
     const { user } = useAuth()
     const { database } = useDatabase()
@@ -21,28 +26,16 @@ const CreateBadgeForm = ({ navigation }: Props) => {
     const uploadBadgeImage = async () => {
         try {
             setUploading(true)
+            storage.uploadBadge(badgeFilename, badgeImageInfo)
 
-            if (imageFormData === null || badgeImageFilename === '') {
-                return;
-            }
-
-            storage.uploadBadge(badgeImageFilename, imageFormData)
-            let { error: uploadError } = await supabase.storage.from('badges').upload(badgeImageFilename, imageFormData)
-            if (uploadError) {
-                throw uploadError
-            }
-
-            storage.getBadgeUrl(badgeImageFilename)
-            let { publicURL, error } = await supabase.storage.from('badges').getPublicUrl(badgeImageFilename);
-            if (error) {
-                throw error
-            }
+            storage.getBadgeUrl(badgeFilename)
+            const publicURL = await storage.getBadgeUrl(badgeFilename);
             if (!publicURL) {
                 return;
             }
 
-            setBadgeUrl(publicURL);
             console.log(publicURL);
+            setBadgeUrl(publicURL);
         } catch (error) {
             alert((error as Error).message)
         } finally {
@@ -51,15 +44,15 @@ const CreateBadgeForm = ({ navigation }: Props) => {
     }
 
     const createBadge = async () => {
-        // upload image to supabase storage
-        await uploadBadgeImage();
-
         // check if recipient exists
         try {
             const recipient = await database.getUserByUsername(badgeReceiver);
             if (!recipient) {
                 throw new Error(`user ${badgeReceiver} does not exist`)
             }
+
+            // upload image to supabase storage
+            await uploadBadgeImage();
 
             const recipientId = recipient.id;
             const senderId = user!.id
@@ -83,30 +76,34 @@ const CreateBadgeForm = ({ navigation }: Props) => {
         navigation.goBack()
     }
 
-    const getBadgeImage = async () => {
-        const imageData = await pickImage();
-        if (!imageData) {
+    const pickBadgeImage = async () => {
+        const { imageInfo, filename: badgeImageFilename, cancelled } = await pickImage()
+        if (cancelled) return
+
+        if (!imageInfo || !badgeImageFilename) {
             return;
         }
 
-        const { filename, imageInfo } = imageData;
-        setBadgeImageFilename(filename);
-        setImageFormData(imageInfo);
+        setBadgeImageInfo(imageInfo)
+        setBadgeFilename(badgeImageFilename)
     }
 
+
+    // TODO design a better image picker component
     return (
         <>
             <h1>Send Badge Form</h1>
-
             <View style={styles.verticallySpaced}>
-                {imageFormData !== null ? (
-                    // <Image source={{ uri: badgeUrl }} style={{ width: 200, height: 200 }} />
-                    <View />
-                ) : (
-                    <View>
-                        <Button title="Pick an image from camera roll" onPress={getBadgeImage} disabled={uploading} />
-                    </View>
-                )}
+                {badgeUrl !== ''
+                    ? (
+                        // <Image source={{ uri: badgeUrl }} style={{ width: 200, height: 200 }} /> 
+                        <View />
+                    )
+                    : (
+                        <View>
+                            <Button title="Pick an image from camera roll" onPress={pickBadgeImage} disabled={uploading} />
+                        </View>
+                    )}
                 <Input
                     label="Recipient username"
                     value={badgeReceiver || ""}

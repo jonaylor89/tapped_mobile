@@ -4,6 +4,7 @@ import { Input } from "react-native-elements";
 import { useAuth } from "../contexts/useAuth";
 import { useDatabase } from "../contexts/useDatabase";
 import { useStorage } from "../contexts/useStorage";
+import { AccountType } from "../domain/models";
 
 const OnboardForm = () => {
     const [name, setName] = useState("");

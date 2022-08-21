@@ -2,14 +2,14 @@ import { Platform } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function pickImage(): Promise<{filename: string; imageInfo: FormData} | void> {
+export async function pickImage(): Promise<{filename?: string; imageInfo?: FormData, cancelled: boolean}> {
 
     if (Platform.OS !== 'web') {
       let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (permissionResult.granted === false) {
         alert('Permission to access camera roll is required!');
-        return;
+        throw new Error('Permission to access camera roll is required!');
       }
     }
 
@@ -24,7 +24,7 @@ export async function pickImage(): Promise<{filename: string; imageInfo: FormDat
     console.log(result);
 
     if (result.cancelled) {
-      return;
+      return { cancelled: true }
     }
 
     // workaround for Expo image picker bug
@@ -43,7 +43,6 @@ export async function pickImage(): Promise<{filename: string; imageInfo: FormDat
     return {
         filename,
         imageInfo: formData,
+        cancelled: false,
     }
-    setBadgeImageFilename(filename)
-    setImageFormData(formData)
   };
