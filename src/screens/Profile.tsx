@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, Linking, TouchableOpacity, Button } from "react-native";
 import { useAuth } from "../contexts/useAuth";
 import Avatar from "../components/Avatar";
-import Badges from "../components/Badges";
+import { BadgesList } from "../components/profile";
 import { AccountType, OnboardedUser } from "../domain/models";
 import { routes } from ".";
 import { useDatabase } from "../contexts/useDatabase";
@@ -64,7 +64,7 @@ const Profile = ({ navigation, route }: Props) => {
                 ? <Button title='Create a new badge' onPress={() => navigation.push(routes.CreateBadgeForm)} />
                 : null
             }
-            <Badges userId={currentUser.id} />
+            <BadgesList userId={currentUser.id} />
         </>
     );
 }

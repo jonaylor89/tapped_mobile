@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import { useDatabase } from "../contexts/useDatabase";
-import { Badge } from "../domain/models";
+import { useDatabase } from "../../contexts/useDatabase";
+import { Badge } from "../../domain/models";
 
 export default function Badges({ userId }: { 
     userId: string;
