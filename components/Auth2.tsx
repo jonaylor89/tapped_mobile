@@ -3,6 +3,7 @@ import { Alert, StyleSheet, View } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { Button, Input } from 'react-native-elements'
 
+
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,9 +34,8 @@ export default function Auth() {
   }
 
   return (
-    
-      <View style={[styles.container, styles.styled]}>
-        <View style={[styles.verticallySpaced, styles.mt20]}>
+      <View style={[styles.container]}>
+        <View style={[styles.verticallySpaced, styles.container2, styles.back, styles.mt20]}>
           <Input
             label="Email"
             leftIcon={{ type: 'font-awesome', name: 'envelope' }}
@@ -45,7 +45,6 @@ export default function Auth() {
             autoCapitalize={'none'}
           />
         </View>
-
          <View style={styles.verticallySpaced}>
           <Input
             label="Password"
@@ -57,51 +56,52 @@ export default function Auth() {
             autoCapitalize={'none'}
           />
         </View>
-
         <View style={[styles.verticallySpaced, styles.mt20]}>
           <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
         </View>
-
         <View style={styles.verticallySpaced}>
-          <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+          <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()}/>
         </View>
-
-        <View style={[styles.styled]}>
-
+        <View style={styles.back}>
+        
         </View>
     </View>
   )
 }
 
+
 const styles = StyleSheet.create({
 
  
+
   container: {
-    height: 40,
+    height: 20,
+    width: '100%',
     justifyContent: 'center',
     flex:1,
     alignItems: 'center',
     marginTop: '30%',
   },
 
-  styled: {
-    margin: 35,
-    flex: 1,
-    backgroundColor: "#FFD1D1",
-    shadowColor: 'grey',
-    shadowRadius: 50,
-    shadowOpacity: 50,
-    borderRadius: 900,
-    border: 'none',
-  }, 
+  container2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex:1,
+    display: 'flex',
+  },
  
+  back: {
+      backgroundColor: 'red',
+      borderRadius: 350,
+  }, 
+
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
   },
   
   mt20: {
-    marginTop: 25,
+    marginTop: 15,
   },
 })
 
