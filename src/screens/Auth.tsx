@@ -1,35 +1,41 @@
 import React, { useState } from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
-import { supabase } from '../lib/supabase'
 import { Button, Input } from 'react-native-elements'
+import { useAuth } from '../contexts/useAuth'
 
-export default function Auth() {
+const Auth = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function signInWithEmail() {
+  const { auth } = useAuth()
+
+  const signInWithEmail = async () => {
     setLoading(true)
-    const { user, error } = await supabase.auth.signIn({
-      email: email,
-      password: password,
-    })
-
-    console.log(user)
-
-    if (error) Alert.alert(error.message)
-    setLoading(false)
+    try {
+      await auth.signIn({
+        email: email,
+        password: password,
+      })
+    } catch (e) {
+      Alert.alert((e as Error).message)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  async function signUpWithEmail() {
+  const signUpWithEmail = async () => {
     setLoading(true)
-    const { user, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
-
-    if (error) Alert.alert(error.message)
-    setLoading(false)
+    try {
+      await auth.signUp({
+        email: email,
+        password: password,
+      })
+    } catch (e) {
+      Alert.alert((e as Error).message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -79,3 +85,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 })
+
+export default Auth;
