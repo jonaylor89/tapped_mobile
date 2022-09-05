@@ -20,7 +20,7 @@ jobs:
                   node-version: 16.x
 
             - name: install deps
-              run: npm install
+              run: npm install --force # bad
 
             - name: test
               run: npm test
