@@ -41,7 +41,7 @@ export default function Badges({ userId }: { userId: string }) {
         );
     }
 
-    const badgeElements = badges.map((badge) => (
+    const badgeElements = badges.map((badge: Badge) => (
         <View key={badge.id}>
             <Text>{badge.id}</Text>
             <Text>{badge.badgeUrl}</Text>

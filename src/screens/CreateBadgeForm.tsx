@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { StyleSheet, Button, View } from 'react-native';
+import { StyleSheet, Button, View, Text } from 'react-native';
 import { Input } from 'react-native-elements';
 import { v4 as uuidv4 } from 'uuid';
 import { RootStackParamList, routes } from '.';
@@ -90,13 +90,13 @@ const CreateBadgeForm = ({ navigation }: Props) => {
         }
 
         setBadgeImageInfo(imageInfo);
-        setBadgeFilename(badgeImageFilename);
+        setBadgeFilename(badgeImageFilename!);
     };
 
     // TODO design a better image picker component
     return (
         <>
-            <h1>Send Badge Form</h1>
+            <Text>Send Badge Form</Text>
             <View style={styles.verticallySpaced}>
                 {badgeUrl !== '' ? (
                     // <Image source={{ uri: badgeUrl }} style={{ width: 200, height: 200 }} />
