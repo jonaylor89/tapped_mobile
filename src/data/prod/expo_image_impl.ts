@@ -7,6 +7,7 @@ import { ImageRepository } from '../image_repository';
 export class ExpoImageImpl implements ImageRepository {
   async pickImage(): Promise<{
     filename: string | null;
+    imageUri: string | null;
     imageInfo: FormData | null;
     cancelled: boolean;
   }> {
@@ -33,6 +34,7 @@ export class ExpoImageImpl implements ImageRepository {
     if (result.cancelled) {
       return {
         filename: null,
+        imageUri: null,
         imageInfo: null,
         cancelled: true,
       };
@@ -42,8 +44,6 @@ export class ExpoImageImpl implements ImageRepository {
     // https://github.com/expo/expo/issues/9984
     const blob = await fetch(result.uri).then((res) => res.blob());
 
-    console.log(blob);
-
     const ext = result.uri.split(';')[0].split('/')[1];
     const filename = `${uuidv4()}.${ext}`;
 
@@ -52,6 +52,7 @@ export class ExpoImageImpl implements ImageRepository {
 
     return {
       filename,
+      imageUri: result.uri,
       imageInfo: formData,
       cancelled: false,
     };

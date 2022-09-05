@@ -1,52 +1,33 @@
+import 'react-native-get-random-values';
+
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { StyleSheet, Button, View, Text } from 'react-native';
+import { StyleSheet, Button, View } from 'react-native';
 import { Input } from 'react-native-elements';
 import { v4 as uuidv4 } from 'uuid';
 import { RootStackParamList } from '.';
 import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
 import { useStorage } from '../contexts/useStorage';
-import { useImagePicker } from '../contexts/useImagePicker';
 import { Badge } from '../domain/models';
 import Routes from './routes';
+
+import { ImagePicker } from '../components/create_badge_form';
+import { useTheme } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, Routes.CreateBadgeForm>;
 
 function CreateBadgeForm({ navigation }: Props) {
   const [uploading, setUploading] = useState(false);
   const [badgeReceiver, setBadgeReceiver] = useState('');
-  const [badgeUrl, setBadgeUrl] = useState('');
   const [badgeImageInfo, setBadgeImageInfo] = useState<FormData | null>(null);
   const [badgeFilename, setBadgeFilename] = useState('');
+  const [badgeUrl, setBadgeUrl] = useState('');
 
   const { user } = useAuth();
   const { database } = useDatabase();
   const { storage } = useStorage();
-  const { imagePicker } = useImagePicker();
-
-  const uploadBadgeImage = async () => {
-    try {
-      setUploading(true);
-
-      if (badgeFilename === '' || badgeImageInfo === null) return;
-
-      storage.uploadBadge(badgeFilename, badgeImageInfo);
-
-      storage.getBadgeUrl(badgeFilename);
-      const publicURL = await storage.getBadgeUrl(badgeFilename);
-      if (!publicURL) {
-        return;
-      }
-
-      console.log(publicURL);
-      setBadgeUrl(publicURL);
-    } catch (error) {
-      alert((error as Error).message);
-    } finally {
-      setUploading(false);
-    }
-  };
+  const theme = useTheme();
 
   const createBadge = async () => {
     // check if recipient exists
@@ -80,39 +61,61 @@ function CreateBadgeForm({ navigation }: Props) {
     navigation.goBack();
   };
 
-  const pickBadgeImage = async () => {
-    const {
-      imageInfo,
-      filename: badgeImageFilename,
-      cancelled,
-    } = await imagePicker.pickImage();
-    if (cancelled) return;
+  const uploadBadgeImage = async () => {
+    try {
+      setUploading(true);
 
-    if (!imageInfo || !badgeImageFilename) {
-      return;
+      if (badgeFilename === '' || badgeImageInfo === null) return;
+
+      storage.uploadBadge(badgeFilename, badgeImageInfo);
+
+      storage.getBadgeUrl(badgeFilename);
+      const publicURL = await storage.getBadgeUrl(badgeFilename);
+      if (!publicURL) {
+        return;
+      }
+
+      console.log(publicURL);
+      setBadgeUrl(publicURL);
+    } catch (error) {
+      alert((error as Error).message);
+    } finally {
+      setUploading(false);
     }
-
-    setBadgeImageInfo(imageInfo);
-    setBadgeFilename(badgeImageFilename!);
   };
+
+  const onImagePicked = (filename: string, imageInfo: FormData) => {
+    setBadgeFilename(filename);
+    setBadgeImageInfo(imageInfo);
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      marginTop: 40,
+      padding: 12,
+      marginLeft: 12,
+      marginRight: 12,
+    },
+    verticallySpaced: {
+      paddingTop: 4,
+      paddingBottom: 4,
+      alignSelf: 'stretch',
+    },
+    mt20: {
+      marginTop: 20,
+    },
+    input: {
+      color: theme.colors.text,
+    },
+  });
 
   // TODO design a better image picker component
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.verticallySpaced}>
-        {badgeUrl !== '' ? (
-          // <Image source={{ uri: badgeUrl }} style={{ width: 200, height: 200 }} />
-          <View />
-        ) : (
-          <View>
-            <Button
-              title='Pick an image from camera roll'
-              onPress={pickBadgeImage}
-              disabled={uploading}
-            />
-          </View>
-        )}
+        <ImagePicker onImagePicked={onImagePicked} />
         <Input
+          style={styles.input}
           label='Recipient Username'
           value={badgeReceiver || ''}
           onChangeText={(text) => setBadgeReceiver(text)}
@@ -124,23 +127,8 @@ function CreateBadgeForm({ navigation }: Props) {
         onPress={() => createBadge()}
         disabled={uploading}
       />
-    </>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
-  },
-  mt20: {
-    marginTop: 20,
-  },
-});
 
 export default CreateBadgeForm;
