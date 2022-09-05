@@ -3,31 +3,33 @@ import { supabase } from './supabase';
 import AuthRepository from '../auth_repository';
 
 export default class SupabaseAuthImpl implements AuthRepository {
-    onAuthStateChange(callback: (event: string, session: Session | null) => Promise<void>): any {
-        const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) =>
-            callback(event, session),
-        );
+  onAuthStateChange(
+    callback: (event: string, session: Session | null) => Promise<void>,
+  ): any {
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (event, session) => callback(event, session),
+    );
 
-        return listener;
-    }
+    return listener;
+  }
 
-    async updateUser(data: { onboarded: boolean }) {
-        await supabase.auth.update({ data: data });
-    }
+  async updateUser(data: { onboarded: boolean }) {
+    await supabase.auth.update({ data });
+  }
 
-    async signUp(data: { email: string; password: string }) {
-        await supabase.auth.signUp(data);
-    }
+  async signUp(data: { email: string; password: string }) {
+    await supabase.auth.signUp(data);
+  }
 
-    session(): any {
-        return supabase.auth.session();
-    }
+  session(): any {
+    return supabase.auth.session();
+  }
 
-    async signIn(data: { email: string; password: string }) {
-        await supabase.auth.signIn(data);
-    }
+  async signIn(data: { email: string; password: string }) {
+    await supabase.auth.signIn(data);
+  }
 
-    async signOut() {
-        await supabase.auth.signOut();
-    }
+  async signOut() {
+    await supabase.auth.signOut();
+  }
 }

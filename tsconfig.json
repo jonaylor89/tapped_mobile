@@ -9,5 +9,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
+  "include": [".eslintrc", "src"],
   "extends": "expo/tsconfig.base"
 }

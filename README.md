@@ -13,11 +13,15 @@ TypeScript is a superset of JavaScript which gives you static types and powerful
 This project depends on `yarn` and `expo` to run.
 
 ```sh
-yarn install # install deps
+npm install # install deps
+```
+
+```sh 
+npm run husky-install # install commit hooks
 ```
 
 ```sh
-yarn start # run expo server
+npm start # run expo server
 ```
 
 ## 📝 Notes

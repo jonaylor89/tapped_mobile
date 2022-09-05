@@ -6,10 +6,8 @@ import { ExpoImageImpl } from '../data/prod/expo_image_impl';
 const imagePicker = new ExpoImageImpl();
 
 export const ImagePickerContext = createContext<{
-    imagePicker: ImageRepository;
+  imagePicker: ImageRepository;
 }>({ imagePicker });
 
 // export the useStorage hook
-export const useImagePicker = () => {
-    return useContext(ImagePickerContext);
-};
+export const useImagePicker = () => useContext(ImagePickerContext);

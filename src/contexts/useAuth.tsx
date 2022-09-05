@@ -1,6 +1,6 @@
+import { useContext, createContext } from 'react';
 import type OnboardedUser from '../domain/models/OnboardedUser';
 
-import { useContext, createContext } from 'react';
 import SupabaseAuthImpl from '../data/prod/supabase_auth_impl';
 import AuthRepository from '../data/auth_repository';
 import { UserModel } from '../domain/models';
@@ -10,12 +10,10 @@ const auth = new SupabaseAuthImpl();
 
 // create a context for authentication
 export const AuthContext = createContext<{
-    authUser: UserModel | null;
-    user: OnboardedUser | null;
-    auth: AuthRepository;
-}>({ authUser: null, user: null, auth: auth });
+  authUser: UserModel | null;
+  user: OnboardedUser | null;
+  auth: AuthRepository;
+}>({ authUser: null, user: null, auth });
 
 // export the useAuth hook
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

@@ -6,10 +6,8 @@ import SupabaseDatabaseImpl from '../data/prod/supabase_database_impl';
 const database = new SupabaseDatabaseImpl();
 
 export const DatabaseContext = createContext<{
-    database: DatabaseRepository;
+  database: DatabaseRepository;
 }>({ database });
 
 // export the useDepencies hook
-export const useDatabase = () => {
-    return useContext(DatabaseContext);
-};
+export const useDatabase = () => useContext(DatabaseContext);

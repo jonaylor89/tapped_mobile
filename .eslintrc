@@ -7,9 +7,9 @@
   "rules": {
     // "no-console": "error",
     "import/first": "error",
+    "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "no-undef": "error",
-    "prettier/prettier": "error",
     "import/no-unresolved": "error"
   },
   "extends": [
@@ -19,6 +19,9 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
+    // "airbnb",
+    // "airbnb-typescript",
+    // "airbnb/hooks",
     "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -29,7 +32,7 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 11,
+    "ecmaVersion": "latest",
     "ecmaFeatures": {
       "jsx": true
     },
