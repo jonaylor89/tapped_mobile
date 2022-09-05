@@ -12,7 +12,7 @@ const OnboardForm = () => {
     const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
 
-    const [avatarUrl, setAvatarUrl] = useState('');
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
     const [loading, setLoading] = useState(false);
 
@@ -74,7 +74,7 @@ const OnboardForm = () => {
     };
 
     const canSubmit = () => {
-        return name !== '' && username !== '' && bio !== '' && avatarUrl !== '';
+        return name !== '' && username !== '' && bio !== '';
     };
 
     // TODO multi-stage onboarding
@@ -85,17 +85,25 @@ const OnboardForm = () => {
                 <Input label='Email' value={authUser?.email} disabled />
             </View>
             <View style={styles.verticallySpaced}>
-                <Input label='Name' value={name || ''} onChangeText={(text) => setName(text)} />
+                <Input
+                    label='Name'
+                    value={name || ''}
+                    onChangeText={(text: string) => setName(text)}
+                />
             </View>
             <View style={styles.verticallySpaced}>
                 <Input
                     label='Username'
                     value={username || ''}
-                    onChangeText={(text) => setUsername(text)}
+                    onChangeText={(text: string) => setUsername(text)}
                 />
             </View>
             <View style={styles.verticallySpaced}>
-                <Input label='Bio' value={bio || ''} onChangeText={(text) => setBio(text)} />
+                <Input
+                    label='Bio'
+                    value={bio || ''}
+                    onChangeText={(text: string) => setBio(text)}
+                />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 {
