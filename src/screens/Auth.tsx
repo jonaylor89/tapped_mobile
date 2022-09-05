@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
-import { Button, Input } from 'react-native-elements'
 import { useAuth } from '../contexts/useAuth'
+import { Button, Input } from 'react-native-elements'
 
 const Auth = () => {
   const [email, setEmail] = useState('')
@@ -39,7 +39,7 @@ const Auth = () => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
@@ -68,7 +68,7 @@ const Auth = () => {
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { OnboardedUser, UserModel } from "../../domain/models";
 import { Auth, OnboardForm } from "../../screens";
 import { AuthContext, useAuth } from "../useAuth";
@@ -11,11 +11,12 @@ export const AuthProvider = ({ children }: {
 }) => {
 
     // create state values for user data and loading
-    const [user, setUser] = useState<OnboardedUser | null>(null);
     const [authUser, setAuthUser] = useState<UserModel | null>(null);
     const [onboarded, setOnboarded] = useState(false)
     const [loading, setLoading] = useState(false);
     const [currentSession, setCurrentSession] = useState<any>(null)
+    const [user, setUser] = useState<OnboardedUser | null>(null);
+
 
     const { database } = useDatabase()
     const { auth } = useAuth()
@@ -41,6 +42,7 @@ export const AuthProvider = ({ children }: {
             const listener =
                 auth.onAuthStateChange(
                     async (_event: string, session: any) => {
+                        console.log('auth state change', _event, session)
                         try {
                             setLoading(true);
                             setCurrentSession(session)
@@ -50,9 +52,9 @@ export const AuthProvider = ({ children }: {
                             }
 
                             setAuthUser(session.user)
-                            const user = await database.getUserById(session.user.id)
-                            if (user) { setOnboarded(true) }
-                            setUser(user);
+                            const dbuser = await database.getUserById(session.user.id)
+                            if (dbuser) { setOnboarded(true) }
+                            setUser(dbuser);
                         } catch (error) {
                             console.error(error)
                         } finally {
@@ -70,7 +72,7 @@ export const AuthProvider = ({ children }: {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [auth, currentSession?.user, database]);
 
     const RouteAuth = () => {
         if (!(currentSession && currentSession.user)) {
@@ -81,15 +83,18 @@ export const AuthProvider = ({ children }: {
             ? children
             : <OnboardForm />
     }
+
     // create signUp, signIn, signOut functions
     const value = { authUser, user, auth }
 
     // use a provider to pass down the value
     return (loading)
-        ? <View>Loading...</View>
+        ? <View><Text>Loading...</Text></View>
         : <AuthContext.Provider value={value}>
             <RouteAuth />
         </AuthContext.Provider>
 };
 
 export default AuthProvider
+
+// ri67e@NV^B3*^&7iDywR

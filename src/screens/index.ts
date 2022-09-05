@@ -5,13 +5,7 @@ import Auth from './Auth';
 import Profile from './Profile'
 import CreateBadgeForm from './CreateBadgeForm';
 import OnboardForm from './OnboardForm';
-
-enum routes {
-    Auth = 'Auth',
-    Profile = 'Profile',
-    CreateBadgeForm = 'CreateBadgeForm',
-    OnboardForm = 'OnboardForm'
-}
+import { routes } from "./routes";
 
 type RootStackParamList = {
     Auth: undefined;
