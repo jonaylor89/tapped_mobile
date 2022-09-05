@@ -12,11 +12,11 @@ export default class SupabaseAuthImpl implements AuthRepository {
     }
 
     async updateUser(data: { onboarded: boolean }) {
-        supabase.auth.updateUser(data);
+        await supabase.auth.update({ data: data });
     }
 
     async signUp(data: { email: string; password: string }) {
-        supabase.auth.signUp(data);
+        await supabase.auth.signUp(data);
     }
 
     session(): any {
@@ -24,10 +24,10 @@ export default class SupabaseAuthImpl implements AuthRepository {
     }
 
     async signIn(data: { email: string; password: string }) {
-        supabase.auth.signIn(data);
+        await supabase.auth.signIn(data);
     }
 
     async signOut() {
-        supabase.auth.signOut();
+        await supabase.auth.signOut();
     }
 }
