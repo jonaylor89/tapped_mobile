@@ -1,25 +1,39 @@
-import { useState } from 'react'
-import { View, Image, Platform } from 'react-native'
-import { Button } from 'react-native-elements'
-import React from 'react'
+import React, { useState } from 'react';
+import { View, Image, Platform, StyleSheet, ImageSourcePropType } from 'react-native';
+import { Button } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
-import { useStorage } from '../contexts/useStorage'
+import { useAssets } from 'expo-asset';
+
+import { useStorage } from '../contexts/useStorage';
 import { useImagePicker } from '../contexts/useImagePicker';
 
-export default function Avatar({ url, size, editable }: {
-    url: string;
+export default function Avatar({
+    url,
+    size,
+    editable,
+    rounded,
+    margin,
+}: {
+    url: string | null | undefined;
     size: number;
     editable: boolean;
+    rounded: boolean;
+    margin: number;
 }) {
     const [imageUrl, setImageUrl] = useState(url);
     const [uploading, setUploading] = useState(false);
 
-    const { storage } = useStorage()
-    const { imagePicker } = useImagePicker()
+    const { storage } = useStorage();
+    const { imagePicker } = useImagePicker();
+
+    const [assets, error] = useAssets([require('../../assets/default_avatar.png')]);
+
+    if (error) {
+        console.error(error);
+    }
 
     const pickImage = async () => {
-
         if (Platform.OS !== 'web') {
             const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
@@ -45,30 +59,29 @@ export default function Avatar({ url, size, editable }: {
 
         // workaround for Expo image picker bug
         // https://github.com/expo/expo/issues/9984
-        const blob = await fetch(result.uri)
-            .then(res => res.blob());
+        const blob = await fetch(result.uri).then((res) => res.blob());
 
-        console.log(blob)
+        console.log(blob);
 
-        const ext = result.uri.split(';')[0].split('/')[1]
-        const filename = `${uuidv4()}.${ext}`
+        const ext = result.uri.split(';')[0].split('/')[1];
+        const filename = `${uuidv4()}.${ext}`;
 
-        console.log(ext)
-        console.log(filename)
+        console.log(ext);
+        console.log(filename);
 
         const formData = new FormData();
-        formData.append("files", blob)
+        formData.append('files', blob);
 
-        uploadAvatar(filename, formData)
+        uploadAvatar(filename, formData);
     };
 
     async function uploadAvatar(filename: string, imageInfo: FormData) {
         try {
-            setUploading(true)
+            setUploading(true);
 
-            await storage.uploadPFP(filename, imageInfo)
+            await storage.uploadPFP(filename, imageInfo);
 
-            const publicUrl = await storage.getPFPUrl(filename)
+            const publicUrl = await storage.getPFPUrl(filename);
             if (!publicUrl) {
                 return;
             }
@@ -77,21 +90,40 @@ export default function Avatar({ url, size, editable }: {
             // onUpload(publicURL);
             setImageUrl(publicUrl);
         } catch (error) {
-            alert((error as Error).message)
+            alert((error as Error).message);
         } finally {
-            setUploading(false)
+            setUploading(false);
         }
     }
 
+    const styles = StyleSheet.create({
+        image: {
+            borderRadius: rounded ? 100 : 0,
+            width: size,
+            height: size,
+        },
+    });
+
     return (
-        <View>
-            {(imageUrl !== '')
-            ? <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
-            : <View />
-    }
-            <View>
-                <Button title="Pick an image from camera roll" onPress={pickImage} disabled={uploading} />
-            </View>
+        <View style={{ margin: margin }}>
+            {url ? (
+                <Image source={{ uri: url }} style={styles.image} />
+            ) : assets ? (
+                <Image source={assets[0] as ImageSourcePropType} style={styles.image} />
+            ) : (
+                <View />
+            )}
+            {editable ? (
+                <View>
+                    <Button
+                        title='Pick an image from camera roll'
+                        onPress={pickImage}
+                        disabled={uploading}
+                    />
+                </View>
+            ) : (
+                <View />
+            )}
         </View>
-    )
+    );
 }

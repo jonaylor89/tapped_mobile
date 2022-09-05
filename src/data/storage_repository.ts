@@ -1,6 +1,5 @@
-
 export default interface StorageRepository {
-    // Profile Picture 
+    // Profile Picture
     uploadPFP(filename: string, imageInfo: FormData): Promise<void>;
     getPFPUrl(filename: string): Promise<string | null>;
 

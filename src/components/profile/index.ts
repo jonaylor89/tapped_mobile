@@ -1,4 +1,4 @@
+import BadgesList from './BadgesList';
+import Socials from './Socials';
 
-import BadgesList from "./BadgesList";
-
-export { BadgesList };
+export { BadgesList, Socials };

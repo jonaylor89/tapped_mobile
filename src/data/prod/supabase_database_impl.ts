@@ -1,4 +1,3 @@
-
 import DatabaseRepository from '../database_repository';
 
 import { supabase } from './supabase';
@@ -10,15 +9,14 @@ enum Tables {
 }
 
 export default class SupabaseDatabaseImpl implements DatabaseRepository {
-
     // User
     async getUserById(id: string): Promise<OnboardedUser | null> {
         try {
-            console.log('SupabaseDatabaseImpl.getUserById', id)
+            console.log('SupabaseDatabaseImpl.getUserById', id);
             const { data, error, status } = await supabase
                 .from(Tables.Users)
                 .select(`*`)
-                .eq("id", id)
+                .eq('id', id)
                 .single();
 
             if (error && status !== 406) {
@@ -26,50 +24,48 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
             }
 
             if (!data) {
-                return null
+                return null;
             }
 
             // TODO validate data
-            return OnboardedUser.fromJSON(data)
+            return OnboardedUser.fromJSON(data);
         } catch (error) {
             // TODO add better log mechanism
-            console.error(error)
-            throw error
+            console.error(error);
+            throw error;
         }
     }
 
     async getUserByUsername(username: string): Promise<OnboardedUser | null> {
         try {
+            console.log('SupabaseDatabaseImpl.getUserByUsername', username);
+            const { data, error, status } = await supabase
+                .from(Tables.Users)
+                .select(`*`)
+                .match({ username })
+                .single();
 
-        console.log('SupabaseDatabaseImpl.getUserByUsername', username)
-        const { data, error, status } = await supabase
-            .from(Tables.Users)
-            .select(`*`)
-            .match({ username })
-            .single()
+            if (error && status !== 406) {
+                throw error;
+            }
 
-        if (error && status !== 406) {
-            throw error;
-        }
+            if (!data) {
+                return null;
+            }
 
-        if (!data) {
-            return null
-        }
-
-        return OnboardedUser.fromJSON(data)
+            return OnboardedUser.fromJSON(data);
         } catch (error) {
-            console.error(error)
-            throw error
+            console.error(error);
+            throw error;
         }
     }
 
     async upsertUser(user: OnboardedUser) {
-
         const dbUser = OnboardedUser.toJSON(user);
 
         const { error } = await supabase
             .from(Tables.Users)
-            .upsert(dbUser, { returning: "minimal" });
+            .upsert(dbUser, { returning: 'minimal' });
 
         if (error) {
             throw error;
@@ -79,8 +75,8 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
     async updateUser(user: OnboardedUser) {
         const dbUser = OnboardedUser.toJSON(user);
         const { error } = await supabase
-            .from("users")
-            .update(dbUser, { returning: "minimal" })
+            .from('users')
+            .update(dbUser, { returning: 'minimal' })
             .match({ id: user.id });
 
         if (error) {
@@ -95,17 +91,16 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
             .select(`*`)
             .match({ receiver_id: userId });
 
-        if (error) throw error
+        if (error) throw error;
+        const badgeData = data || [];
 
-        return data.map(Badge.fromJSON)
+        return badgeData.map(Badge.fromJSON);
     }
 
     async insertBadge(badge: Badge) {
-       const dbBadge = Badge.toJSON(badge); 
+        const dbBadge = Badge.toJSON(badge);
 
-        const { error } = await supabase
-            .from('badges')
-            .insert([dbBadge])
+        const { error } = await supabase.from('badges').insert([dbBadge]);
 
         if (error) {
             throw error;

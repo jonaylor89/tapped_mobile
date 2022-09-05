@@ -1,4 +1,3 @@
-
 class OnboardedUser {
     id!: string;
     name: string | null = null;
@@ -19,7 +18,9 @@ class OnboardedUser {
         this.id = id;
     }
 
-    static uninitializedUser = (id: string): OnboardedUser => { return new OnboardedUser(id) }
+    static uninitializedUser = (id: string): OnboardedUser => {
+        return new OnboardedUser(id);
+    };
 
     static toJSON = (user: OnboardedUser): any => {
         return {
@@ -36,8 +37,8 @@ class OnboardedUser {
             avatar_url: user.avatarUrl,
             account_type: user.accountType,
             updated_at: user.updatedAt,
-        }
-    }
+        };
+    };
 
     static fromJSON = (other: any): OnboardedUser => {
         return {
@@ -55,8 +56,8 @@ class OnboardedUser {
             accountType: other.account_type,
             updatedAt: other.updated_at,
             createdAt: other.created_at,
-        }
-    }
+        };
+    };
 }
 
-export default OnboardedUser
+export default OnboardedUser;

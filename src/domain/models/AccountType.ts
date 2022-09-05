@@ -3,4 +3,4 @@ enum AccountType {
     Business = 'business',
 }
 
-export default AccountType
+export default AccountType;

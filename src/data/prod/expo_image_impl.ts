@@ -1,14 +1,14 @@
-import { Platform } from "react-native";
+import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ImageRepository } from "../image_repository";
+import { ImageRepository } from '../image_repository';
 
 export class ExpoImageImpl implements ImageRepository {
-    async pickImage(): Promise<{ 
-        filename: string | null; 
-        imageInfo: FormData | null; 
-        cancelled: boolean; 
+    async pickImage(): Promise<{
+        filename: string | null;
+        imageInfo: FormData | null;
+        cancelled: boolean;
     }> {
         if (Platform.OS !== 'web') {
             const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -30,30 +30,29 @@ export class ExpoImageImpl implements ImageRepository {
         console.log(result);
 
         if (result.cancelled) {
-            return { 
+            return {
                 filename: null,
                 imageInfo: null,
-                cancelled: true
-            }
+                cancelled: true,
+            };
         }
 
         // workaround for Expo image picker bug
         // https://github.com/expo/expo/issues/9984
-        const blob = await fetch(result.uri)
-            .then(res => res.blob());
+        const blob = await fetch(result.uri).then((res) => res.blob());
 
-        console.log(blob)
+        console.log(blob);
 
-        const ext = result.uri.split(';')[0].split('/')[1]
-        const filename = `${uuidv4()}.${ext}`
+        const ext = result.uri.split(';')[0].split('/')[1];
+        const filename = `${uuidv4()}.${ext}`;
 
         const formData = new FormData();
-        formData.append("files", blob)
+        formData.append('files', blob);
 
         return {
             filename,
             imageInfo: formData,
             cancelled: false,
-        }
+        };
     }
 }

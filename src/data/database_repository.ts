@@ -1,5 +1,5 @@
-import Badge from "../domain/models/Badge";
-import { OnboardedUser } from "../domain/models"
+import Badge from '../domain/models/Badge';
+import { OnboardedUser } from '../domain/models';
 
 export default interface DatabaseRepository {
     // User
