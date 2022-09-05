@@ -92,8 +92,9 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
             .match({ receiver_id: userId });
 
         if (error) throw error;
+        const badgeData = data || [];
 
-        return data.map(Badge.fromJSON);
+        return badgeData.map(Badge.fromJSON);
     }
 
     async insertBadge(badge: Badge) {

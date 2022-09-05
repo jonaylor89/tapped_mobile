@@ -4,6 +4,7 @@
         "android": "expo start --android",
         "ios": "expo start --ios",
         "web": "expo start --web",
+        "build": "tsc --noEmit",
         "test": "",
         "husky-install": "husky install",
         "lint-staged": "lint-staged --config lint-staged.js",
