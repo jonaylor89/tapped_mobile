@@ -11,6 +11,10 @@ export default class SupabaseAuthImpl implements AuthRepository {
         return listener;
     }
 
+    async updateUser(data: { onboarded: boolean }) {
+        supabase.auth.updateUser(data);
+    }
+
     async signUp(data: { email: string; password: string }) {
         supabase.auth.signUp(data);
     }

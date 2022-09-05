@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
             // Get user data
             if (currentSession?.user) {
                 setAuthUser(currentSession.user);
-                database.getUserById(currentSession.user.id).then((user) => {
+                database.getUserById(currentSession.user.id).then((user: OnboardedUser | null) => {
                     if (user) {
                         setOnboarded(true);
                     }
@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
             // listen for changes to auth
             const listener = auth.onAuthStateChange(async (_event: string, session: any) => {
-                console.log('auth state change', _event, session);
                 try {
                     setLoading(true);
                     setCurrentSession(session);
@@ -94,5 +93,3 @@ export const AuthProvider = ({ children }: { children: any }) => {
 };
 
 export default AuthProvider;
-
-// ri67e@NV^B3*^&7iDywR

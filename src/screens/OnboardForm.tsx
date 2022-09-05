@@ -16,7 +16,7 @@ const OnboardForm = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const { authUser } = useAuth();
+    const { authUser, auth } = useAuth();
     const { database } = useDatabase();
     const { storage } = useStorage();
     const { imagePicker } = useImagePicker();
@@ -66,6 +66,7 @@ const OnboardForm = () => {
                 updatedAt: new Date(),
                 createdAt: new Date(),
             });
+            auth.updateUser({ onboarded: true });
         } catch (error) {
             Alert.alert((error as Error).message);
         } finally {
