@@ -1,4 +1,4 @@
 export default class UserModel {
-  id!: string;
-  email!: string;
+    id!: string;
+    email!: string;
 }

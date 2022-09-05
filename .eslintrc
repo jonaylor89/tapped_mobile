@@ -16,11 +16,11 @@
       "plugin:react/recommended",
       "plugin:@typescript-eslint/recommended",
       "plugin:react-hooks/recommended",
-      "prettier"
+      "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "root": true,
-    "plugins": ["react", "@typescript-eslint"],
+    "plugins": ["react", "@typescript-eslint", "prettier"],
     "parserOptions": {
       "ecmaVersion": 11,
       "ecmaFeatures": {
