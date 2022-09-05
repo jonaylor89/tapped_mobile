@@ -14,7 +14,7 @@ import { useTheme } from '@react-navigation/native';
 import type { RootStackParamList } from '.';
 
 import Routes from './routes';
-import { BadgesList, Socials } from '../components/profile';
+import { BadgesList, Socials, AccountTypeBadge } from '../components/profile';
 import { AccountType, OnboardedUser } from '../domain/models';
 import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
@@ -96,6 +96,10 @@ function Profile({ navigation, route }: Props) {
       marginLeft: 14,
       marginTop: 6,
     },
+    usernameRow: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
   });
 
   const animatedHeaderStyles = useAnimatedStyle(() => {
@@ -152,9 +156,10 @@ function Profile({ navigation, route }: Props) {
     <View style={styles.container}>
       <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={6}>
         {/* TODO add an edit profile button and screen */}
-        <Animated.Text style={[styles.usernameHeader, animatedUsernameStyles]}>
-          {user.name}
-        </Animated.Text>
+        <Animated.View style={[styles.usernameRow, animatedUsernameStyles]}>
+          <Text style={styles.usernameHeader}>{user.name}</Text>
+          <AccountTypeBadge user={user} />
+        </Animated.View>
         <Socials user={user} />
         <View style={{ marginBottom: 8, marginTop: 8 }}>
           <Text style={styles.bioHeader}>More Info</Text>
