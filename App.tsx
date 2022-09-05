@@ -39,6 +39,9 @@ export default function App() {
                   <RootStack.Screen
                     name={Routes.CreateBadgeForm}
                     component={CreateBadgeForm}
+                    options={{
+                      title: 'Create Badge',
+                    }}
                   />
                 </RootStack.Navigator>
               </NavigationContainer>

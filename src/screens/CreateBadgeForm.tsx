@@ -7,6 +7,7 @@ import { RootStackParamList } from '.';
 import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
 import { useStorage } from '../contexts/useStorage';
+import { useImagePicker } from '../contexts/useImagePicker';
 import { Badge } from '../domain/models';
 import Routes from './routes';
 
@@ -22,12 +23,7 @@ function CreateBadgeForm({ navigation }: Props) {
   const { user } = useAuth();
   const { database } = useDatabase();
   const { storage } = useStorage();
-
-  const pickImage = () => ({
-    imageInfo: null,
-    filename: null,
-    cancelled: true,
-  });
+  const { imagePicker } = useImagePicker();
 
   const uploadBadgeImage = async () => {
     try {
@@ -89,7 +85,7 @@ function CreateBadgeForm({ navigation }: Props) {
       imageInfo,
       filename: badgeImageFilename,
       cancelled,
-    } = await pickImage();
+    } = await imagePicker.pickImage();
     if (cancelled) return;
 
     if (!imageInfo || !badgeImageFilename) {
@@ -103,7 +99,6 @@ function CreateBadgeForm({ navigation }: Props) {
   // TODO design a better image picker component
   return (
     <>
-      <Text>Send Badge Form</Text>
       <View style={styles.verticallySpaced}>
         {badgeUrl !== '' ? (
           // <Image source={{ uri: badgeUrl }} style={{ width: 200, height: 200 }} />
@@ -118,7 +113,7 @@ function CreateBadgeForm({ navigation }: Props) {
           </View>
         )}
         <Input
-          label='Recipient username'
+          label='Recipient Username'
           value={badgeReceiver || ''}
           onChangeText={(text) => setBadgeReceiver(text)}
         />
