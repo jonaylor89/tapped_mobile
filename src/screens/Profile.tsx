@@ -3,7 +3,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from ".";
 
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { Text, Linking, TouchableOpacity, Button, View, StyleSheet, } from "react-native";
+import { Text, Button, View, StyleSheet, } from "react-native";
 import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Constants from "expo-constants";
 
