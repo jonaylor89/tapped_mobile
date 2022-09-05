@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
             // Get user data
             if (currentSession?.user) {
                 setAuthUser(currentSession.user);
-                database.getUserById(currentSession.user.id).then((user: OnboardedUser) => {
+                database.getUserById(currentSession.user.id).then((user: OnboardedUser | null) => {
                     if (user) {
                         setOnboarded(true);
                     }
