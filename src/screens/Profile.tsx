@@ -168,7 +168,7 @@ const Profile = ({ navigation, route }: Props) => {
                 </View>
                 {user.accountType === AccountType.Business ? (
                     <Button
-                        title="Create a new badge"
+                        title='Create a new badge'
                         onPress={() => navigation.push(routes.CreateBadgeForm)}
                     />
                 ) : null}

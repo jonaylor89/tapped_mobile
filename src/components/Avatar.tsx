@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Platform, StyleSheet, SafeAreaView, ImageSourcePropType } from 'react-native';
+import { View, Image, Platform, StyleSheet, ImageSourcePropType } from 'react-native';
 import { Button } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import { v4 as uuidv4 } from 'uuid';
@@ -116,7 +116,7 @@ export default function Avatar({
             {editable ? (
                 <View>
                     <Button
-                        title="Pick an image from camera roll"
+                        title='Pick an image from camera roll'
                         onPress={pickImage}
                         disabled={uploading}
                     />

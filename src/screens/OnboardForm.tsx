@@ -82,20 +82,20 @@ const OnboardForm = () => {
     return (
         <View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Input label="Email" value={authUser?.email} disabled />
+                <Input label='Email' value={authUser?.email} disabled />
             </View>
             <View style={styles.verticallySpaced}>
-                <Input label="Name" value={name || ''} onChangeText={(text) => setName(text)} />
+                <Input label='Name' value={name || ''} onChangeText={(text) => setName(text)} />
             </View>
             <View style={styles.verticallySpaced}>
                 <Input
-                    label="Username"
+                    label='Username'
                     value={username || ''}
                     onChangeText={(text) => setUsername(text)}
                 />
             </View>
             <View style={styles.verticallySpaced}>
-                <Input label="Bio" value={bio || ''} onChangeText={(text) => setBio(text)} />
+                <Input label='Bio' value={bio || ''} onChangeText={(text) => setBio(text)} />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 {

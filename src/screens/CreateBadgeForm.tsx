@@ -22,6 +22,10 @@ const CreateBadgeForm = ({ navigation }: Props) => {
     const { database } = useDatabase();
     const { storage } = useStorage();
 
+    const pickImage = () => {
+        return { imageInfo: null, filename: null, cancelled: true };
+    };
+
     const uploadBadgeImage = async () => {
         try {
             setUploading(true);
@@ -62,9 +66,9 @@ const CreateBadgeForm = ({ navigation }: Props) => {
             // Insert badge into badges table
             const badge: Badge = {
                 id: uuidv4(),
-                badge_url: badgeUrl,
-                receiver_id: recipientId,
-                sender_id: senderId,
+                badgeUrl: badgeUrl,
+                receiverId: recipientId,
+                senderId: senderId,
             };
             database.insertBadge(badge);
         } catch (e) {
@@ -100,20 +104,20 @@ const CreateBadgeForm = ({ navigation }: Props) => {
                 ) : (
                     <View>
                         <Button
-                            title="Pick an image from camera roll"
+                            title='Pick an image from camera roll'
                             onPress={pickBadgeImage}
                             disabled={uploading}
                         />
                     </View>
                 )}
                 <Input
-                    label="Recipient username"
+                    label='Recipient username'
                     value={badgeReceiver || ''}
                     onChangeText={(text) => setBadgeReceiver(text)}
                 />
             </View>
 
-            <Button title="Confirm" onPress={() => createBadge()} disabled={uploading} />
+            <Button title='Confirm' onPress={() => createBadge()} disabled={uploading} />
         </>
     );
 };

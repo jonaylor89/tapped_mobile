@@ -42,30 +42,30 @@ const Auth = () => {
         <View style={styles.container}>
             <View style={[styles.verticallySpaced, styles.mt20]}>
                 <Input
-                    label="Email"
+                    label='Email'
                     leftIcon={{ type: 'font-awesome', name: 'envelope' }}
                     onChangeText={(text) => setEmail(text)}
                     value={email}
-                    placeholder="email@address.com"
+                    placeholder='email@address.com'
                     autoCapitalize={'none'}
                 />
             </View>
             <View style={styles.verticallySpaced}>
                 <Input
-                    label="Password"
+                    label='Password'
                     leftIcon={{ type: 'font-awesome', name: 'lock' }}
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     secureTextEntry={true}
-                    placeholder="Password"
+                    placeholder='Password'
                     autoCapitalize={'none'}
                 />
             </View>
             <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+                <Button title='Sign in' disabled={loading} onPress={() => signInWithEmail()} />
             </View>
             <View style={styles.verticallySpaced}>
-                <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+                <Button title='Sign up' disabled={loading} onPress={() => signUpWithEmail()} />
             </View>
         </View>
     );
