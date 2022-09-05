@@ -1,6 +1,6 @@
 export enum routes {
-    Auth = 'Auth',
-    Profile = 'Profile',
-    CreateBadgeForm = 'CreateBadgeForm',
-    OnboardForm = 'OnboardForm'
+  Auth = "Auth",
+  Profile = "Profile",
+  CreateBadgeForm = "CreateBadgeForm",
+  OnboardForm = "OnboardForm",
 }

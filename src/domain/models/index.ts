@@ -1,4 +1,3 @@
-
 import Badge from "./Badge";
 import OnboardedUser from "./OnboardedUser";
 import UserModel from "./UserModel";

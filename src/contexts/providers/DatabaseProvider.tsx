@@ -1,20 +1,17 @@
-import React from 'react'
+import React from "react";
 import { DatabaseContext, useDatabase } from "../useDatabase";
 
-export const DatabaseProvider = ({ children }: {
-    children: any
-}) => {
+export const DatabaseProvider = ({ children }: { children: any }) => {
+  const { database } = useDatabase();
 
-    const { database } = useDatabase()
+  const value = { database };
 
-    const value = { database }
-
-    // use a provider to pass down the value
-    return (
-        <DatabaseContext.Provider value={value}>
-            {children}
-        </DatabaseContext.Provider>
-    );
+  // use a provider to pass down the value
+  return (
+    <DatabaseContext.Provider value={value}>
+      {children}
+    </DatabaseContext.Provider>
+  );
 };
 
-export default DatabaseProvider
+export default DatabaseProvider;
