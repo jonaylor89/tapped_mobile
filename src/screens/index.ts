@@ -8,12 +8,20 @@ import OnboardForm from './OnboardForm';
 import { routes } from './routes';
 
 type RootStackParamList = {
-    Auth: undefined;
-    Profile: { userId: string };
-    OnboardForm: undefined;
-    CreateBadgeForm: undefined;
+  Auth: undefined;
+  Profile: { userId: string };
+  OnboardForm: undefined;
+  CreateBadgeForm: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-export { RootStack, RootStackParamList, routes, Auth, Profile, CreateBadgeForm, OnboardForm };
+export {
+  RootStack,
+  RootStackParamList,
+  routes,
+  Auth,
+  Profile,
+  CreateBadgeForm,
+  OnboardForm,
+};

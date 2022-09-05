@@ -6,10 +6,8 @@ import StorageRepository from '../data/storage_repository';
 const storage = new SupabaseStorageImpl();
 
 export const StorageContext = createContext<{
-    storage: StorageRepository;
+  storage: StorageRepository;
 }>({ storage });
 
 // export the useStorage hook
-export const useStorage = () => {
-    return useContext(StorageContext);
-};
+export const useStorage = () => useContext(StorageContext);
