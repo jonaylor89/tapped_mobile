@@ -3,6 +3,7 @@ type Subscription = {
 };
 
 export default interface AuthRepository {
+    updateUser(data: any): Promise<void>;
     signUp(data: any): Promise<void>;
     signIn(data: any): Promise<void>;
     signOut(): Promise<void>;
