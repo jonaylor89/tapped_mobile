@@ -2,7 +2,7 @@ import 'react-native-get-random-values';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { StyleSheet, Button, View, TextInput } from 'react-native';
+import { StyleSheet, Button, View, TextInput} from 'react-native';
 import { Input } from 'react-native-elements';
 import { v4 as uuidv4 } from 'uuid';
 import { RootStackParamList } from '.';
