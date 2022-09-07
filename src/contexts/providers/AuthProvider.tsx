@@ -4,6 +4,7 @@ import { OnboardedUser, UserModel } from '../../domain/models';
 import { Auth, OnboardForm } from '../../screens';
 import { AuthContext, useAuth } from '../useAuth';
 import { useDatabase } from '../useDatabase';
+import { Loader } from '../../components/Loader';
 
 export function AuthProvider({ children }: { children: any }) {
   // create state values for user data and loading
@@ -86,7 +87,7 @@ export function AuthProvider({ children }: { children: any }) {
   // use a provider to pass down the value
   return loading ? (
     <View>
-      <Text>Loading...</Text>
+      return <Loader isLoading={loading} />;
     </View>
   ) : (
     <AuthContext.Provider value={value}>

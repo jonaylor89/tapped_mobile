@@ -19,7 +19,7 @@ import { AccountType, OnboardedUser } from '../domain/models';
 import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
 import { Avatar } from '../components';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 
 export const HEADER_HEIGHT = 64 + Constants.statusBarHeight;
 

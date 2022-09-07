@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useDatabase } from '../../contexts/useDatabase';
 import { Badge } from '../../domain/models';
+import Loader from '../Loader';
 
 export default function Badges({ userId }: { userId: string }) {
   const [badges, setBadges] = useState<Badge[]>([]);
@@ -34,7 +35,7 @@ export default function Badges({ userId }: { userId: string }) {
   });
 
   if (!fontsLoaded) {
-    return <Text>Loading...</Text>;
+    return <Loader isLoading={fontsLoaded} />;
   }
 
   const badgeElements = badges.map((badge: Badge) => (

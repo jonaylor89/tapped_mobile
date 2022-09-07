@@ -11,15 +11,15 @@ import Animated, {
 import Constants from 'expo-constants';
 import { useFonts, Manrope_700Bold } from '@expo-google-fonts/manrope';
 import { useTheme } from '@react-navigation/native';
-import type { RootStackParamList } from '.';
+import type { RootStackParamList } from '../screens';
 import { useStorage } from '../contexts/useStorage';
 
-import Routes from './routes';
-import { BadgesList, Socials, AccountTypeBadge } from '../components/profile';
+import Routes from '../screens/routes';
+import { BadgesList, Socials, AccountTypeBadge } from './profile';
 import { AccountType, OnboardedUser } from '../domain/models';
 import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
-import { Avatar } from '../components';
+import { Avatar } from '.';
 
 export default function Loader(props) {
     const state = {
