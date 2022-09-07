@@ -2,7 +2,7 @@ import 'react-native-get-random-values';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { StyleSheet, Button, View } from 'react-native';
+import { StyleSheet, Button, View, TextInput } from 'react-native';
 import { Input } from 'react-native-elements';
 import { v4 as uuidv4 } from 'uuid';
 import { RootStackParamList } from '.';
@@ -34,7 +34,10 @@ function CreateBadgeForm({ navigation }: Props) {
     try {
       const recipient = await database.getUserByUsername(badgeReceiver);
       if (!recipient) {
-        throw new Error(`user ${badgeReceiver} does not exist`);
+        // throw new Error(`user ${badgeReceiver} does not exist`);
+        alert(`user does not exist`);
+        setBadgeReceiver('');
+        return;
       }
 
       // upload image to supabase storage
@@ -42,6 +45,7 @@ function CreateBadgeForm({ navigation }: Props) {
 
       const recipientId = recipient.id;
       const senderId = user!.id;
+      const createdAt = Date.now();
 
       // Insert badge into badges table
       const badge: Badge = {
@@ -49,6 +53,7 @@ function CreateBadgeForm({ navigation }: Props) {
         badgeUrl,
         receiverId: recipientId,
         senderId,
+        createdAt,
       };
       database.insertBadge(badge);
     } catch (e) {
@@ -58,7 +63,8 @@ function CreateBadgeForm({ navigation }: Props) {
     // go back to account page
     // TODO redirect to account page
     // setCreateBadgeForm(false);
-    navigation.goBack();
+    navigation.goBack()
+    alert(`badge succesfully created`)
   };
 
   const uploadBadgeImage = async () => {
@@ -105,8 +111,15 @@ function CreateBadgeForm({ navigation }: Props) {
       marginTop: 20,
     },
     input: {
-      color: theme.colors.text,
+      // color: theme.colors.text,
+      backgroundColor: 'white',
+      color: 'black',
     },
+    errorText: {
+      fontSize: 12,
+      color: 'red',
+      alignSelf: 'center',
+    }
   });
 
   // TODO design a better image picker component
@@ -114,12 +127,13 @@ function CreateBadgeForm({ navigation }: Props) {
     <View style={styles.container}>
       <View style={styles.verticallySpaced}>
         <ImagePicker onImagePicked={onImagePicked} />
-        <Input
+        <TextInput
           style={styles.input}
-          label='Recipient Username'
+          autoCapitalize='none'
           value={badgeReceiver || ''}
           onChangeText={(text) => setBadgeReceiver(text)}
-        />
+          // usernameIsValid ? null : <View /> 
+        /> 
       </View>
 
       <Button
