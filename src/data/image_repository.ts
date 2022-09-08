@@ -2,7 +2,7 @@ export interface ImageRepository {
   pickImage(): Promise<{
     filename: string | null;
     imageUri: string | null;
-    imageInfo: FormData | null;
+    imageBlob: Blob | null;
     cancelled: boolean | null;
   }>;
 }

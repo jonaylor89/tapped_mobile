@@ -4,6 +4,6 @@ export default interface StorageRepository {
   getPFPUrl(filename: string): Promise<string | null>;
 
   // Badges
-  uploadBadge(filename: string, imageInfo: FormData): Promise<void>;
+  uploadBadge(filename: string, imageBlob: Blob): Promise<void>;
   getBadgeUrl(filename: string): Promise<string | null>;
 }

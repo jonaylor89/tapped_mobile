@@ -19,9 +19,8 @@ type Props = NativeStackScreenProps<RootStackParamList, Routes.CreateBadgeForm>;
 function CreateBadgeForm({ navigation }: Props) {
   const [uploading, setUploading] = useState(false);
   const [badgeReceiver, setBadgeReceiver] = useState('');
-  const [badgeImageInfo, setBadgeImageInfo] = useState<FormData | null>(null);
+  const [badgeImageBlob, setBadgeImageBlob] = useState<Blob | null>(null);
   const [badgeFilename, setBadgeFilename] = useState('');
-  const [badgeUrl, setBadgeUrl] = useState('');
 
   const { user } = useAuth();
   const { database } = useDatabase();
@@ -44,7 +43,10 @@ function CreateBadgeForm({ navigation }: Props) {
       }
 
       // upload image to supabase storage
-      await uploadBadgeImage();
+      const publicUrl = await uploadBadgeImage();
+      if (publicUrl === null) {
+        throw new Error('badge image did not upload correctly');
+      }
 
       const recipientId = recipient.id;
       const senderId = user.id;
@@ -52,7 +54,7 @@ function CreateBadgeForm({ navigation }: Props) {
       // Insert badge into badges table
       const badge: Badge = {
         id: uuidv4(),
-        badgeUrl,
+        badgeUrl: publicUrl || '',
         receiverId: recipientId,
         senderId,
         createdAt: new Date(),
@@ -62,39 +64,33 @@ function CreateBadgeForm({ navigation }: Props) {
       console.log(e);
     }
 
-    // go back to account page
-    // TODO redirect to account page
-    // setCreateBadgeForm(false);
     navigation.goBack();
     alert(`badge succesfully created`);
   };
 
-  const uploadBadgeImage = async () => {
+  const uploadBadgeImage = async (): Promise<string | null> => {
     try {
       setUploading(true);
 
-      if (badgeFilename === '' || badgeImageInfo === null) return;
+      if (badgeFilename === '' || badgeImageBlob === null) return null;
 
-      storage.uploadBadge(badgeFilename, badgeImageInfo);
+      await storage.uploadBadge(badgeFilename, badgeImageBlob);
 
-      storage.getBadgeUrl(badgeFilename);
       const publicURL = await storage.getBadgeUrl(badgeFilename);
-      if (!publicURL) {
-        return;
-      }
 
-      console.log(publicURL);
-      setBadgeUrl(publicURL);
-    } catch (error) {
-      alert((error as Error).message);
+      return publicURL;
+    } catch (error: any) {
+      console.error(error.message);
+      alert(error.message);
+      return null;
     } finally {
       setUploading(false);
     }
   };
 
-  const onImagePicked = (filename: string, imageInfo: FormData) => {
+  const onImagePicked = (filename: string, imageBlob: Blob) => {
     setBadgeFilename(filename);
-    setBadgeImageInfo(imageInfo);
+    setBadgeImageBlob(imageBlob);
   };
 
   const styles = StyleSheet.create({

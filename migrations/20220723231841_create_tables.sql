@@ -57,9 +57,9 @@ CREATE POLICY "Public badges are viewable by everyone."
   ON badges FOR SELECT
   USING ( true );
 
-CREATE POLICY "Business users can send badges."
+CREATE POLICY "Users can send badges."
   ON badges FOR INSERT
-  WITH CHECK ( auth.uid() == sender_id AND account_type == 'business' );
+  WITH CHECK ( auth.uid() = sender_id );
 
 -- Set up Realtime
 BEGIN;

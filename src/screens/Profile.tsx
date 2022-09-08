@@ -146,7 +146,13 @@ function Profile({ navigation, route }: Props) {
         </Animated.Text>
       ),
     });
-  }, [navigation, user]);
+  }, [
+    animatedHeaderStyles,
+    navigation,
+    styles.title,
+    theme.colors.background,
+    user,
+  ]);
 
   if (loading || !user || !fontsLoaded) {
     return <Text>{`Loading... ${loading} and ${JSON.stringify(user)}`}</Text>;

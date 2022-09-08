@@ -23,11 +23,14 @@ export default class SupabaseStorageImpl implements StorageRepository {
     return publicURL;
   }
 
-  async uploadBadge(filename: string, imageInfo: FormData): Promise<void> {
+  async uploadBadge(filename: string, imageBlob: Blob): Promise<void> {
     const { error } = await supabase.storage
       .from(Buckets.Badges)
-      .upload(filename, imageInfo);
-    if (error) throw error;
+      .upload(filename, imageBlob);
+    if (error) {
+      console.error('[ERROR] (uploadBadge)', error, JSON.stringify(imageBlob));
+      throw error;
+    }
   }
 
   async getBadgeUrl(filename: string): Promise<string | null> {

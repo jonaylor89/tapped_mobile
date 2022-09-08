@@ -23,23 +23,23 @@ const styles = StyleSheet.create({
 const ImagePicker = ({
   onImagePicked,
 }: {
-  onImagePicked: (filename: string, imageInfo: FormData) => void;
+  onImagePicked: (filename: string, imageBlob: Blob) => void;
 }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
 
   const { imagePicker } = useImagePicker();
 
   const pickBadgeImage = async () => {
-    const { imageUri, imageInfo, filename, cancelled } =
+    const { imageUri, imageBlob, filename, cancelled } =
       await imagePicker.pickImage();
 
     if (cancelled) return;
 
-    if (!imageInfo || !filename) {
+    if (!imageBlob || !filename) {
       return;
     }
 
-    onImagePicked(filename, imageInfo);
+    onImagePicked(filename, imageBlob);
 
     console.log('AHHHH', imageUri);
     setImageUri(imageUri);

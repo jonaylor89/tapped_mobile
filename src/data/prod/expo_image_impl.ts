@@ -8,7 +8,7 @@ export class ExpoImageImpl implements ImageRepository {
   async pickImage(): Promise<{
     filename: string | null;
     imageUri: string | null;
-    imageInfo: FormData | null;
+    imageBlob: Blob | null;
     cancelled: boolean;
   }> {
     if (Platform.OS !== 'web') {
@@ -29,31 +29,41 @@ export class ExpoImageImpl implements ImageRepository {
       quality: 1,
     });
 
-    console.log(result);
+    console.log('image picker results', result);
 
     if (result.cancelled) {
       return {
         filename: null,
         imageUri: null,
-        imageInfo: null,
+        imageBlob: null,
         cancelled: true,
       };
     }
 
-    // workaround for Expo image picker bug
-    // https://github.com/expo/expo/issues/9984
-    const blob = await fetch(result.uri).then((res) => res.blob());
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob: Blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', result.uri, true);
+      xhr.send(null);
+    });
+    console.log('blob', blob);
 
     const ext = result.uri.split(';')[0].split('/')[1];
     const filename = `${uuidv4()}.${ext}`;
 
-    const formData = new FormData();
-    formData.append('files', blob);
-
     return {
       filename,
       imageUri: result.uri,
-      imageInfo: formData,
+      imageBlob: blob,
       cancelled: false,
     };
   }
