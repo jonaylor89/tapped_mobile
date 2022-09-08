@@ -106,4 +106,32 @@ export default class SupabaseDatabaseImpl implements DatabaseRepository {
       throw error;
     }
   }
+
+  async searchUser(username: string): Promise<OnboardedUser[] | null> {
+    try {
+      const { data, error } = await supabase
+        .from(Tables.Users)
+        .select()
+        .textSearch('username', `'${username}'`);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log('foo: ', JSON.stringify(data));
+
+      if (!data) {
+        return null;
+      }
+
+      console.log('RAWR: ', JSON.stringify(data));
+
+      const mappedData = data.map((user) => OnboardedUser.fromJSON(user));
+
+      return mappedData;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

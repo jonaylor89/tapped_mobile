@@ -11,4 +11,8 @@ export default interface DatabaseRepository {
   // Badges
   getBadgesByUser(userId: string): Promise<Badge[]>;
   insertBadge(badge: Badge): Promise<void>;
+
+  // search
+  searchUser(username: string): Promise<OnboardedUser[] | null>; // TODO: what is the promise waiting for? the username?
+  // searchBadge(badge: Badge): Promise<void>; // TODO: should this also be void? not needed for now, client-side filter for alpha
 }
