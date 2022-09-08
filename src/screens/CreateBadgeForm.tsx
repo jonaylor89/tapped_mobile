@@ -3,7 +3,6 @@ import 'react-native-get-random-values';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { StyleSheet, Button, View, TextInput } from 'react-native';
-import { Input } from 'react-native-elements';
 import { v4 as uuidv4 } from 'uuid';
 import { RootStackParamList } from '.';
 import { useAuth } from '../contexts/useAuth';
@@ -32,6 +31,10 @@ function CreateBadgeForm({ navigation }: Props) {
   const createBadge = async () => {
     // check if recipient exists
     try {
+      if (!user) {
+        return;
+      }
+
       const recipient = await database.getUserByUsername(badgeReceiver);
       if (!recipient) {
         // throw new Error(`user ${badgeReceiver} does not exist`);
@@ -44,8 +47,7 @@ function CreateBadgeForm({ navigation }: Props) {
       await uploadBadgeImage();
 
       const recipientId = recipient.id;
-      const senderId = user!.id;
-      const createdAt = Date.now();
+      const senderId = user.id;
 
       // Insert badge into badges table
       const badge: Badge = {
@@ -53,7 +55,7 @@ function CreateBadgeForm({ navigation }: Props) {
         badgeUrl,
         receiverId: recipientId,
         senderId,
-        createdAt,
+        createdAt: new Date(),
       };
       database.insertBadge(badge);
     } catch (e) {
@@ -63,8 +65,8 @@ function CreateBadgeForm({ navigation }: Props) {
     // go back to account page
     // TODO redirect to account page
     // setCreateBadgeForm(false);
-    navigation.goBack()
-    alert(`badge succesfully created`)
+    navigation.goBack();
+    alert(`badge succesfully created`);
   };
 
   const uploadBadgeImage = async () => {
@@ -111,15 +113,17 @@ function CreateBadgeForm({ navigation }: Props) {
       marginTop: 20,
     },
     input: {
-      // color: theme.colors.text,
-      backgroundColor: 'white',
-      color: 'black',
+      backgroundColor: theme.colors.background,
+      color: theme.colors.text,
+      borderWidth: 1,
+      padding: 5,
+      margin: 12,
     },
     errorText: {
       fontSize: 12,
       color: 'red',
       alignSelf: 'center',
-    }
+    },
   });
 
   const confirmDisabled =
@@ -133,9 +137,11 @@ function CreateBadgeForm({ navigation }: Props) {
           style={styles.input}
           autoCapitalize='none'
           value={badgeReceiver || ''}
+          placeholder='Recipient`s Username'
+          placeholderTextColor={'#AAAAAA'}
           onChangeText={(text) => setBadgeReceiver(text)}
-          // usernameIsValid ? null : <View /> 
-        /> 
+          // usernameIsValid ? null : <View />
+        />
       </View>
 
       <Button
