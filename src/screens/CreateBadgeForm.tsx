@@ -132,7 +132,7 @@ function CreateBadgeForm({ navigation }: Props) {
           autoCapitalize='none'
           value={badgeReceiver || ''}
           onChangeText={(text) => setBadgeReceiver(text)}
-          // usernameIsValid ? null : <View /> 
+          // TODO: usernameIsValid ? null : <View /> 
         /> 
       </View>
 

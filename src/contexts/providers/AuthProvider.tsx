@@ -4,7 +4,7 @@ import { OnboardedUser, UserModel } from '../../domain/models';
 import { Auth, OnboardForm } from '../../screens';
 import { AuthContext, useAuth } from '../useAuth';
 import { useDatabase } from '../useDatabase';
-import { Loader } from '../../components/Loader';
+import { Loader } from '../../screens/Loader';
 
 export function AuthProvider({ children }: { children: any }) {
   // create state values for user data and loading

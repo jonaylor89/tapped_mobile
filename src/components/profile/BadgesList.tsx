@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useDatabase } from '../../contexts/useDatabase';
 import { Badge } from '../../domain/models';
-import Loader from '../Loader';
+import Loader from '../../screens/Loader';
 
 export default function Badges({ userId }: { userId: string }) {
   const [badges, setBadges] = useState<Badge[]>([]);

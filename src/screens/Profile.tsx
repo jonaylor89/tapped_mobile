@@ -19,7 +19,7 @@ import { AccountType, OnboardedUser } from '../domain/models';
 import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
 import { Avatar } from '../components';
-import Loader from '../components/Loader';
+import Loader from './Loader';
 
 export const HEADER_HEIGHT = 64 + Constants.statusBarHeight;
 
@@ -159,7 +159,7 @@ function Profile({ navigation, route }: Props) {
                 <Socials user={user} />
                 <View style={{ marginBottom: 8, marginTop: 8 }}>
                     <Text style={styles.bioHeader}>More Info</Text>
-                    <Text style={styles.text}>{user.bio}</Text>
+                    <Text>{user.bio}</Text>
                 </View>
                 {user.accountType === AccountType.Business ? (
                     <Button
