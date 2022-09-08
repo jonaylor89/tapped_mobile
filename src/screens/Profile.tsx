@@ -20,7 +20,7 @@ import { useAuth } from '../contexts/useAuth';
 import { useDatabase } from '../contexts/useDatabase';
 import { Avatar } from '../components';
 
-export const HEADER_HEIGHT = 64 + Constants.statusBarHeight;
+const HEADER_HEIGHT = 64 + Constants.statusBarHeight;
 
 type Props = NativeStackScreenProps<RootStackParamList, Routes.Profile>;
 

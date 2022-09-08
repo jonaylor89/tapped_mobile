@@ -109,7 +109,9 @@ function CreateBadgeForm({ navigation }: Props) {
     },
   });
 
-  // TODO design a better image picker component
+  const confirmDisabled =
+    uploading || badgeReceiver === '' || badgeFilename === '';
+
   return (
     <View style={styles.container}>
       <View style={styles.verticallySpaced}>
@@ -125,7 +127,7 @@ function CreateBadgeForm({ navigation }: Props) {
       <Button
         title='Confirm'
         onPress={() => createBadge()}
-        disabled={uploading}
+        disabled={confirmDisabled}
       />
     </View>
   );

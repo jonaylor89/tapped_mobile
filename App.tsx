@@ -25,7 +25,7 @@ export default function App() {
             <ImagePickerProvider>
               <NavigationContainer theme={DarkTheme}>
                 {/* 
-                TODO make a splash screen 
+                TODO make a splash/loading screen 
                 The screen will just display a loading icon  
                 but will load all the necessary bits of data 
                 as well as check if a user is onboarded or not
